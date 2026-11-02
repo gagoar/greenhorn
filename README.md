@@ -111,17 +111,15 @@ These numbers are untested defaults. No study backs them. They are guesses until
 - The numbers above are untested defaults.
 - The checker reads text shape. It cannot tell whether a definition is true or whether an example is a good one.
 - Each of the warn checks can be wrong. `undefined-repeated-term` will flag a name that needs no definition.
-- The method is a hypothesis. We know of no study that compares definition-first with example-first text. The human eval in `eval/README.md` is how the method gets tested. It has no results yet.
+- The method is a hypothesis. No study tests this combination. The human eval in `eval/README.md` is how the method gets tested. It has no results yet.
 
-## Prior art and reading
+## Prior art and research
 
 [coldread](https://github.com/patrykwiener/coldread) by patrykwiener solves a related problem: it makes session context readable to a reader who was outside the session. greenhorn targets a different gap, the domain concepts that a newcomer lacks.
 
-The design leans on these sources. They are supporting reading, not verified against the primary paper, and not proof for this tool:
+We started with a terms block at the top of the pull request description. Then we read the papers. In the one direct test (Rawson et al. 2015, 131, 176 and 197 university students), performance was similar when examples came before or after the definition, so we dropped our own claim about order. What is left is a hypothesis that we are testing: a newcomer follows technical text better when a reader with no context marks where they get lost, when every gap is filled from the real source, and when the text opens with one concrete example. No study tests this combination, and the defaults above are untested.
 
-- Concreteness fading: Fyfe et al. (2014).
-- Mismatch risk of analogies: Gray and Holyoak (2021).
-- The worked-example effect and the expertise reversal effect: the Sweller line of work.
+[How we got here](https://gagoar.github.io/greenhorn/evidence.html) tells the whole account and lists every source with its read status.
 
 ## Privacy
 

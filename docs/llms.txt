@@ -13,7 +13,7 @@ greenhorn has two commands: /greenhorn:explain (rewrite) and /greenhorn:test (fi
 
 - [Home](https://gagoar.github.io/greenhorn/): a worked before and after, how it works, limits, install
 - [Guide](https://gagoar.github.io/greenhorn/guide.html): commands, reader profiles, config, checks, FAQ
-- [Evidence](https://gagoar.github.io/greenhorn/evidence.html): what we verified and did not, prior art, the human eval
+- [How we got here](https://gagoar.github.io/greenhorn/evidence.html): the first design, what we got wrong, the papers we read and could not read, the audit, the hypothesis and the human eval
 
 ## For agents working with greenhorn
 

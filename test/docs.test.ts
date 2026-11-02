@@ -158,3 +158,36 @@ test("every page has the floating GitHub link with an inline SVG", () => {
     assert.ok(inner.includes("<svg") && inner.includes("<path") && !inner.includes("<img"), `${name}: the GitHub mark is not an inline SVG`);
   });
 });
+
+const HYPOTHESIS_PHRASE = "follows technical text better when";
+const LIMITS_PHRASE = "No study tests";
+const STATUS_LABELS = ["Read in full", "Abstract only"];
+const BANNED_PHRASES = ["proven", "evidence-based", "research shows", "studies show"];
+const MIN_SOURCE_ROWS = 12;
+
+test("the home page and the account page state the hypothesis and say that no study tests it", () => {
+  ["index.html", "evidence.html"].forEach((name) => {
+    assert.ok(page(name).includes(HYPOTHESIS_PHRASE), `${name} lacks the hypothesis statement`);
+    assert.ok(page(name).includes(LIMITS_PHRASE), `${name} lacks the limits statement`);
+  });
+  assert.ok(page("index.html").includes('id="how-we-got-here"'));
+  assert.ok(page("evidence.html").includes("<h1>How we got here</h1>"));
+});
+
+test("every external source link in the sources section has a status label in its row or line", () => {
+  const section = page("evidence.html").split('id="sources"')[1]?.split("</section>")[0] ?? "";
+  const hasRemoteLink = (chunk: string): boolean => tags(chunk, "a").some((tag) => isRemote(attr(tag, "href") ?? ""));
+  const rows = section.split("<tr>").slice(1).filter(hasRemoteLink);
+  const lines = section.split("<li>").slice(1).filter(hasRemoteLink);
+  assert.ok(rows.length >= MIN_SOURCE_ROWS, "the sources table has too few rows");
+  rows.forEach((row) => assert.ok(STATUS_LABELS.some((label) => row.includes(`<td>${label}</td>`)), `a source row has no status label: ${row.slice(0, 120)}`));
+  assert.ok(lines.length > 0);
+  lines.forEach((line) => assert.ok(STATUS_LABELS.some((label) => line.includes(label)), `a source line has no status label: ${line.slice(0, 120)}`));
+});
+
+test("the home page and the account page never claim a result is proven, evidence-based or shown by research", () => {
+  ["index.html", "evidence.html"].forEach((name) => {
+    const text = page(name).toLowerCase();
+    BANNED_PHRASES.forEach((phrase) => assert.ok(!text.includes(phrase), `${name} contains "${phrase}"`));
+  });
+});

@@ -46,7 +46,7 @@
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
-<header class="hero"><div class="wrap"><nav class="nav" aria-label="Main"><a class="brand" href="index.html"><img src="assets/icon.svg" alt="" width="32" height="32">greenhorn</a><a href="index.html" aria-current="page">Home</a><a href="guide.html">Guide</a><a href="evidence.html">Evidence</a><a href="https://github.com/gagoar/greenhorn">GitHub</a></nav><div class="hero-body"><div class="hero-text"><h1>Explain it to someone who has never seen your system.</h1><p class="lead">greenhorn is a Claude Code plugin that rewrites technical text for a reader who is new to your system.</p><pre class="install"><code>/plugin marketplace add gagoar/gago-plugins
+<header class="hero"><div class="wrap"><nav class="nav" aria-label="Main"><a class="brand" href="index.html"><img src="assets/icon.svg" alt="" width="32" height="32">greenhorn</a><a href="index.html" aria-current="page">Home</a><a href="guide.html">Guide</a><a href="evidence.html">How we got here</a><a href="https://github.com/gagoar/greenhorn">GitHub</a></nav><div class="hero-body"><div class="hero-text"><h1>Explain it to someone who has never seen your system.</h1><p class="lead">greenhorn is a Claude Code plugin that rewrites technical text for a reader who is new to your system.</p><pre class="install"><code>/plugin marketplace add gagoar/gago-plugins
 /plugin install greenhorn@gago-plugins</code></pre></div><img class="hero-art" src="assets/icon.svg" alt="greenhorn icon: a rubber duck on a pier at sunset, next to a suitcase" width="210" height="210"></div></div></header>
 <main id="main">
 <section id="a-worked-example">
@@ -71,16 +71,21 @@ $ node scripts/check-text.ts testdata/readme/after.md
 <ol><li>A cold reader reads your text. The cold reader is a read-only agent. It lists each word, step or jump where a stranger gets lost. These places are the stumbles. For each stumble it writes the question it would ask.</li><li>Claude answers each stumble from your code, the linked issue or your docs. If no source backs an answer, the item goes on a list of open questions for you. Claude invents nothing.</li><li>The rewrite opens with the gist. The gist is one sentence that says what the text is about.</li><li>Next comes one example with real values.</li><li>Last comes the mechanism. The mechanism is the part that explains how the thing works. Each term gets a short definition at its first use.</li></ol>
 <p>The cold reader also writes one sentence for what it thinks the text says. If that sentence differs from what you meant, the text fails. You can run only the cold reader with <code>/greenhorn:test</code>. It rewrites nothing.</p>
 </section>
+<section id="how-we-got-here">
+<h2>How we got here</h2>
+<p>We started with a terms block at the top of the pull request description. Then we read the papers. In the one direct test (Rawson et al. 2015, with 131, 176 and 197 university students), performance was similar when examples came before or after the definition. So we dropped our own claim about order. What is left is a hypothesis that we are testing: a newcomer follows technical text better when a reader with no context marks where they get lost, when every gap is filled from the real source, and when the text opens with one concrete example. No study tests this combination.</p>
+<p><a href="evidence.html">Read the whole account</a>.</p>
+</section>
 <section id="what-it-cannot-do">
 <h2>What it cannot do</h2>
 <p>The reader is a model. It is not a human newcomer. It finds likely stumbles. It does not prove that a text is clear, and a clean result does not prove it either. The final test is a real person.</p>
-<p>The method is a hypothesis. We know of no study that compares definition-first with example-first text, and the human eval has no results yet. The limits, such as 5 terms per text, are untested defaults. No study backs them.</p>
+<p>The method is a hypothesis. No study tests this combination, and the human eval has no results yet. The limits, such as 5 terms per text, are untested defaults. No study backs them.</p>
 <p>The checker reads the shape of a text. It cannot tell whether a definition is true.</p>
 </section>
 <section id="install">
 <h2>Install</h2>
 <ol><li><code>/plugin marketplace add gagoar/gago-plugins</code></li><li><code>/plugin install greenhorn@gago-plugins</code></li></ol>
-<p>The two helper plugins, <code>unmistakable</code> and <code>iceberg</code>, install with greenhorn. If one is missing, <code>/greenhorn:explain</code> stops and prints the command to install it. The <a href="guide.html">guide</a> lists every command. The <a href="evidence.html">evidence</a> page says what we verified and what we did not.</p>
+<p>The two helper plugins, <code>unmistakable</code> and <code>iceberg</code>, install with greenhorn. If one is missing, <code>/greenhorn:explain</code> stops and prints the command to install it. The <a href="guide.html">guide</a> lists every command. The <a href="evidence.html">account of how we got here</a> lists every source and what we could not read.</p>
 </section>
 <section id="about-the-name">
 <h2>About the name</h2>
