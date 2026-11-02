@@ -86,15 +86,12 @@ function frontmatter(path: string): string {
   return `${block}\n`;
 }
 
-test("plugin.json, package.json and marketplace.json agree on the version", () => {
+test("plugin.json and package.json agree on the version", () => {
   const plugin = manifest();
   assert.match(plugin.version, SEMVER);
   assert.equal(plugin.license, "MIT");
   const pkg: { readonly version: string } = JSON.parse(read("package.json"));
-  const market: { readonly metadata: { readonly version: string }; readonly plugins: readonly { readonly name: string; readonly version: string }[] } = JSON.parse(read(PLUGIN_DIR, "marketplace.json"));
   assert.equal(pkg.version, plugin.version);
-  assert.equal(market.metadata.version, plugin.version);
-  assert.deepEqual(market.plugins.map((entry) => [entry.name, entry.version]), [[plugin.name, plugin.version]]);
 });
 
 test("each skill path in plugin.json exists and has a name and a description", () => {
@@ -188,7 +185,7 @@ test("the README has the sections that the listing links to, and the icon at the
   ["## Privacy", "## Terms", "## License", "## Credits", "## Limits", "## Install"].forEach((heading) => assert.ok(readme.includes(heading), `the README lacks ${heading}`));
   const icon = (JSON.parse(read(PLUGIN_DIR, "plugin.json")) as { readonly icon: string }).icon.replace(ICON_PREFIX, "");
   assert.ok(readme.startsWith(`<img src="${icon}"`) && readme.split("\n")[0]?.includes('width="120"'));
-  assert.ok(readme.includes("/plugin marketplace add gagoar/greenhorn") && readme.includes("/plugin install greenhorn@greenhorn"));
+  assert.ok(readme.includes("/plugin marketplace add gagoar/gago-plugins") && readme.includes("/plugin install greenhorn@gago-plugins") && !readme.includes("greenhorn@greenhorn"));
   assert.ok(readme.includes("untested defaults"));
 });
 

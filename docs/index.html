@@ -3,23 +3,23 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>greenhorn: write it so a newcomer can follow</title>
-<meta name="description" content="A Claude Code plugin that rewrites technical text for a reader who is new to your system. It shows where a stranger gets lost and answers each gap from your code.">
+<title>greenhorn: explain technical text to someone new to your system</title>
+<meta name="description" content="A Claude Code plugin that rewrites technical text for a reader who has never seen your system. It finds where a stranger gets lost, answers each gap from your code, and puts one real example first.">
 <meta name="theme-color" content="#2E2160">
 <link rel="icon" type="image/svg+xml" href="assets/icon.svg">
 <link rel="canonical" href="https://gagoar.github.io/greenhorn/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="greenhorn">
-<meta property="og:title" content="greenhorn: write it so a newcomer can follow">
-<meta property="og:description" content="A Claude Code plugin that rewrites technical text for a reader who is new to your system. It shows where a stranger gets lost and answers each gap from your code.">
+<meta property="og:title" content="greenhorn: explain technical text to someone new to your system">
+<meta property="og:description" content="A Claude Code plugin that rewrites technical text for a reader who has never seen your system. It finds where a stranger gets lost, answers each gap from your code, and puts one real example first.">
 <meta property="og:url" content="https://gagoar.github.io/greenhorn/">
 <meta property="og:image" content="https://gagoar.github.io/greenhorn/assets/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="greenhorn: a rubber duck on a pier at sunset, next to a suitcase">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="greenhorn: write it so a newcomer can follow">
-<meta name="twitter:description" content="A Claude Code plugin that rewrites technical text for a reader who is new to your system. It shows where a stranger gets lost and answers each gap from your code.">
+<meta name="twitter:title" content="greenhorn: explain technical text to someone new to your system">
+<meta name="twitter:description" content="A Claude Code plugin that rewrites technical text for a reader who has never seen your system. It finds where a stranger gets lost, answers each gap from your code, and puts one real example first.">
 <meta name="twitter:image" content="https://gagoar.github.io/greenhorn/assets/og.png">
 <link rel="stylesheet" href="assets/site.css">
 <script type="application/ld+json">{
@@ -28,7 +28,7 @@
  "name": "greenhorn",
  "applicationCategory": "DeveloperApplication",
  "operatingSystem": "macOS, Linux, Windows (Claude Code with Node 22.18 or later)",
- "description": "A Claude Code plugin that rewrites technical text for a reader who is new to your system. It shows where a stranger gets lost and answers each gap from your code.",
+ "description": "A Claude Code plugin that rewrites technical text for a reader who has never seen your system. It finds where a stranger gets lost, answers each gap from your code, and puts one real example first.",
  "url": "https://gagoar.github.io/greenhorn/",
  "softwareVersion": "0.1.0",
  "license": "https://opensource.org/licenses/MIT",
@@ -46,8 +46,8 @@
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
-<header class="hero"><div class="wrap"><nav class="nav" aria-label="Main"><a class="brand" href="index.html"><img src="assets/icon.svg" alt="" width="32" height="32">greenhorn</a><a href="index.html" aria-current="page">Home</a><a href="guide.html">Guide</a><a href="evidence.html">Evidence</a><a href="https://github.com/gagoar/greenhorn">GitHub</a></nav><div class="hero-body"><div class="hero-text"><h1>Write it so a greenhorn can follow.</h1><p class="lead">greenhorn is a Claude Code plugin that rewrites technical text for a reader who is new to your system.</p><pre class="install"><code>/plugin marketplace add gagoar/greenhorn
-/plugin install greenhorn@greenhorn</code></pre></div><img class="hero-art" src="assets/icon.svg" alt="greenhorn icon: a rubber duck on a pier at sunset, next to a suitcase" width="210" height="210"></div></div></header>
+<header class="hero"><div class="wrap"><nav class="nav" aria-label="Main"><a class="brand" href="index.html"><img src="assets/icon.svg" alt="" width="32" height="32">greenhorn</a><a href="index.html" aria-current="page">Home</a><a href="guide.html">Guide</a><a href="evidence.html">Evidence</a><a href="https://github.com/gagoar/greenhorn">GitHub</a></nav><div class="hero-body"><div class="hero-text"><h1>Explain it to someone who has never seen your system.</h1><p class="lead">greenhorn is a Claude Code plugin that rewrites technical text for a reader who is new to your system.</p><pre class="install"><code>/plugin marketplace add gagoar/gago-plugins
+/plugin install greenhorn@gago-plugins</code></pre></div><img class="hero-art" src="assets/icon.svg" alt="greenhorn icon: a rubber duck on a pier at sunset, next to a suitcase" width="210" height="210"></div></div></header>
 <main id="main">
 <section id="a-worked-example">
 <h2>A worked example</h2>
@@ -67,7 +67,7 @@ $ node scripts/check-text.ts testdata/readme/after.md
 </section>
 <section id="how-it-works">
 <h2>How it works</h2>
-<p>A greenhorn is a newcomer who just got off the boat. Here, it is a reader with no access to your repository and no hint of the topic. The steps below run in order.</p>
+<p>The steps below run in order. They start with a reader that has no access to your repository and no hint of the topic.</p>
 <ol><li>A cold reader reads your text. The cold reader is a read-only agent. It lists each word, step or jump where a stranger gets lost. These places are the stumbles. For each stumble it writes the question it would ask.</li><li>Claude answers each stumble from your code, the linked issue or your docs. If no source backs an answer, the item goes on a list of open questions for you. Claude invents nothing.</li><li>The rewrite opens with the gist. The gist is one sentence that says what the text is about.</li><li>Next comes one example with real values.</li><li>Last comes the mechanism. The mechanism is the part that explains how the thing works. Each term gets a short definition at its first use.</li></ol>
 <p>The cold reader also writes one sentence for what it thinks the text says. If that sentence differs from what you meant, the text fails. You can run only the cold reader with <code>/greenhorn:test</code>. It rewrites nothing.</p>
 </section>
@@ -79,8 +79,12 @@ $ node scripts/check-text.ts testdata/readme/after.md
 </section>
 <section id="install">
 <h2>Install</h2>
-<ol><li><code>/plugin marketplace add gagoar/greenhorn</code></li><li><code>/plugin install greenhorn@greenhorn</code></li></ol>
-<p>greenhorn also needs two other plugins, <code>unmistakable</code> and <code>iceberg</code>, from the <code>gago-plugins</code> marketplace. If one is missing, <code>/greenhorn:explain</code> stops and prints the command to install it. The <a href="guide.html">guide</a> lists every command. The <a href="evidence.html">evidence</a> page says what we verified and what we did not.</p>
+<ol><li><code>/plugin marketplace add gagoar/gago-plugins</code></li><li><code>/plugin install greenhorn@gago-plugins</code></li></ol>
+<p>The two helper plugins, <code>unmistakable</code> and <code>iceberg</code>, install with greenhorn. If one is missing, <code>/greenhorn:explain</code> stops and prints the command to install it. The <a href="guide.html">guide</a> lists every command. The <a href="evidence.html">evidence</a> page says what we verified and what we did not.</p>
+</section>
+<section id="about-the-name">
+<h2>About the name</h2>
+<p>A greenhorn is a newcomer. The plugin is named for the reader it writes for.</p>
 </section>
 </main>
 <footer class="foot"><div class="wrap"><p>MIT &middot; v0.1.0 &middot; by <a href="https://github.com/gagoar">gagoar</a></p><p>Icon: &ldquo;Bath toy&rdquo; by SUPRIYANTO YANTO (kamalm030391), from <a href="https://thenounproject.com/icon/bath-toy-2990119/">Noun Project</a> (<a href="https://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a>), recolored. <a href="https://github.com/gagoar/greenhorn/blob/main/CREDITS.md">Credits</a></p><p class="links"><a href="https://github.com/gagoar/greenhorn">Source</a><a href="https://github.com/gagoar/greenhorn/issues">Issues</a></p></div></footer>

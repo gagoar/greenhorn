@@ -4,6 +4,11 @@
 
 greenhorn has two commands: /greenhorn:explain (rewrite) and /greenhorn:test (find stumbles only). A model reader is not a human newcomer. The default limits, such as 5 terms, are untested guesses.
 
+## Install
+
+/plugin marketplace add gagoar/gago-plugins
+/plugin install greenhorn@gago-plugins
+
 ## Docs
 
 - [Home](https://gagoar.github.io/greenhorn/): a worked before and after, how it works, limits, install

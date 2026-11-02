@@ -31,30 +31,18 @@
   {
    "@type": "HowToStep",
    "position": 1,
-   "name": "Add the greenhorn marketplace: /plugin marketplace add gagoar/greenhorn",
-   "text": "Add the greenhorn marketplace: /plugin marketplace add gagoar/greenhorn"
+   "name": "Add the marketplace: /plugin marketplace add gagoar/gago-plugins",
+   "text": "Add the marketplace: /plugin marketplace add gagoar/gago-plugins"
   },
   {
    "@type": "HowToStep",
    "position": 2,
-   "name": "Add the marketplace for the two helper plugins: /plugin marketplace add gagoar/gago-plugins",
-   "text": "Add the marketplace for the two helper plugins: /plugin marketplace add gagoar/gago-plugins"
+   "name": "Install greenhorn: /plugin install greenhorn@gago-plugins",
+   "text": "Install greenhorn: /plugin install greenhorn@gago-plugins"
   },
   {
    "@type": "HowToStep",
    "position": 3,
-   "name": "Install the helpers: /plugin install unmistakable@gago-plugins and /plugin install iceberg@gago-plugins",
-   "text": "Install the helpers: /plugin install unmistakable@gago-plugins and /plugin install iceberg@gago-plugins"
-  },
-  {
-   "@type": "HowToStep",
-   "position": 4,
-   "name": "Install greenhorn: /plugin install greenhorn@greenhorn",
-   "text": "Install greenhorn: /plugin install greenhorn@greenhorn"
-  },
-  {
-   "@type": "HowToStep",
-   "position": 5,
    "name": "Run it on a file: /greenhorn:explain path/to/text.md",
    "text": "Run it on a file: /greenhorn:explain path/to/text.md"
   }
@@ -85,7 +73,7 @@
 <main id="main">
 <section id="install">
 <h2>Install</h2>
-<ol><li>Add the greenhorn marketplace: <code>/plugin marketplace add gagoar/greenhorn</code></li><li>Add the marketplace for the two helper plugins: <code>/plugin marketplace add gagoar/gago-plugins</code></li><li>Install the helpers: <code>/plugin install unmistakable@gago-plugins</code> and <code>/plugin install iceberg@gago-plugins</code></li><li>Install greenhorn: <code>/plugin install greenhorn@greenhorn</code></li><li>Run it on a file: <code>/greenhorn:explain path/to/text.md</code></li></ol>
+<ol><li>Add the marketplace: <code>/plugin marketplace add gagoar/gago-plugins</code></li><li>Install greenhorn: <code>/plugin install greenhorn@gago-plugins</code>. The helper plugins <code>unmistakable</code> and <code>iceberg</code> install with it, because plugin.json declares them as <code>dependencies</code>. If one is missing, the skill stops and prints the command to install it.</li><li>Run it on a file: <code>/greenhorn:explain path/to/text.md</code></li></ol>
 </section>
 <section id="the-two-commands">
 <h2>The two commands</h2>

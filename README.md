@@ -2,7 +2,7 @@
 
 # greenhorn
 
-**Write technical text so a newcomer can follow it: find where a stranger gets lost, answer each gap from your code, and show one real example first.**
+**Explain it to someone who has never seen your system.**
 
 greenhorn is a Claude Code plugin. It has two commands:
 
@@ -35,19 +35,13 @@ The checker is shallow. It saw that the "before" text has no example. It did not
 ## Install
 
 ```
-/plugin marketplace add gagoar/greenhorn
-/plugin install greenhorn@greenhorn
-```
-
-greenhorn needs two other plugins, `unmistakable` (skill `asd-ste100`) and `iceberg` (skill `iceberg:edit`). Both come from the `gago-plugins` marketplace:
-
-```
 /plugin marketplace add gagoar/gago-plugins
-/plugin install unmistakable@gago-plugins
-/plugin install iceberg@gago-plugins
+/plugin install greenhorn@gago-plugins
 ```
 
-If one is missing, `/greenhorn:explain` stops and prints the command to install it.
+The two helper plugins, `unmistakable` (skill `asd-ste100`) and `iceberg` (skill `iceberg:edit`), install with greenhorn. If one is missing, `/greenhorn:explain` stops and prints the command to install it.
+
+A greenhorn is a newcomer. The plugin is named for the reader it writes for.
 
 ## How it works
 

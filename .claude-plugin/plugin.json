@@ -3,7 +3,7 @@
   "displayName": "greenhorn",
   "version": "0.1.0",
   "icon": "./.claude-plugin/icon.png",
-  "description": "Write technical text so a newcomer can follow it. A stumble test finds where a stranger gets lost, each gap is answered from your code, and a real example comes first.",
+  "description": "Rewrites technical text for a reader who has never seen your system. It finds where a stranger gets lost, answers each gap from your code, and puts one real example first.",
   "author": {
     "name": "gagoar",
     "url": "https://github.com/gagoar"

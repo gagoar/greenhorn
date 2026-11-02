@@ -5,7 +5,7 @@ description: >
   A cold reader finds where a stranger gets lost, each gap is answered from the code, the issue or the docs
   (never invented), and the rewrite puts one concrete example before the mechanism. Trigger when the user says
   "explain this to a newcomer", "make this readable for someone new", "the reader does not know this system",
-  "write for a cold reader", "write this so a greenhorn can follow it", "this PR description is too dense for
+  "write for a cold reader", "explain this to someone who has never seen the system", "this PR description is too dense for
   someone new", or runs /greenhorn:explain. Works on a PR description, release notes, a design doc or an
   incident write-up. Skip it when the text already reads well to the target reader.
 argument-hint: "[file-path | pasted text] [--profile smart-outsider|adjacent-engineer|new-hire]"
