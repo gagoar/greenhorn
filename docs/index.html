@@ -32,7 +32,6 @@
  "url": "https://gagoar.github.io/greenhorn/",
  "softwareVersion": "0.1.0",
  "keywords": "Claude Code plugin, pull request description, technical writing, documentation for newcomers, onboarding",
- "keywords": "Claude Code plugin, pull request description, technical writing, documentation for newcomers, onboarding",
  "license": "https://opensource.org/licenses/MIT",
  "author": {
   "@type": "Person",
@@ -48,82 +47,56 @@
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
-<header class="hero"><div class="wrap"><nav class="nav" aria-label="Main"><a class="brand" href="index.html"><img src="assets/icon.svg" alt="" width="32" height="32">greenhorn</a><a href="index.html" aria-current="page">Home</a><a href="guide.html">Guide</a><a href="evidence.html">How we got here</a><a href="https://github.com/gagoar/greenhorn">GitHub</a></nav><div class="hero-body"><div class="hero-text"><h1>Explain it to someone who has never seen your system.</h1><p class="lead">greenhorn is a Claude Code plugin that rewrites technical text for a reader who is new to your system.</p><p class="angle">Machines write more of the code now. The person who reviews, runs or inherits a change is often new to it, even on their own team. We have no study of this. It is what we see in our own work, and it is why we built greenhorn.</p><p class="angle">Machines write more of the code now. The person who reviews, runs or inherits a change is often new to it, even on their own team. We have no study of this. It is what we see in our own work, and it is why we built greenhorn.</p><pre class="install"><code>/plugin marketplace add gagoar/gago-plugins
+<header class="hero"><div class="wrap"><nav class="nav" aria-label="Main"><a class="brand" href="index.html"><img src="assets/icon.svg" alt="" width="32" height="32">greenhorn</a><a href="index.html" aria-current="page">Home</a><a href="guide.html">Guide</a><a href="evidence.html">How we got here</a><a href="https://github.com/gagoar/greenhorn">GitHub</a></nav><div class="hero-body"><div class="hero-text"><h1>Explain it to someone who has never seen your system.</h1><p class="lead">greenhorn is a Claude Code plugin that rewrites technical text for a reader who is new to your system.</p><p class="angle">We know AI writes most of the code today. The experts are machines now. Some of us still need to understand what ships.</p><pre class="install"><code>/plugin marketplace add gagoar/gago-plugins
 /plugin install greenhorn@gago-plugins</code></pre></div><img class="hero-art" src="assets/icon.svg" alt="greenhorn icon: a rubber duck on a pier at sunset, next to a suitcase" width="210" height="210"></div></div></header>
 <main id="main">
-<section id="the-reader-did-not-write-it">
-<h2>The reader did not write it</h2>
-<p>Reviewing a change was hard before this. <a href="https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/ICSE202013-codereview.pdf">Bacchelli and Bird (2013)</a> observed and surveyed developers at Microsoft. They report that understanding the change is the key aspect of code review, and interviewees named it as their main challenge. Their study tests no fix.</p>
-<p>When a tool writes the change, the person who posts the description may know little more than the reviewer. The text must then carry what the code cannot say: what this is, why it exists, and one real case.</p>
+<section id="where-this-fits">
+<h2>Where this fits</h2>
+<p>We plan our work. Our Skills are curated and battle tested, so the agent writes coherent code. <a href="https://github.com/gagoar/pr-brief">pr-brief</a> writes the description, on one premise: a well-written description should suffice.</p>
+<p>Then the PRs showed up in GitHub, and we were out of context anyway. We needed a better way in. greenhorn is that way in. <a href="https://gagoar.github.io/foghorn/">foghorn</a> does the same for releases.</p>
 </section>
 <section id="a-real-run">
 <h2>A real run</h2>
-<p>We ran <code>/greenhorn:explain</code> on a pull request description from our own repository, <a href="https://github.com/gagoar/typescript-patterns-enforcer/pull/33">typescript-patterns-enforcer #33</a>. The original is 655 words and has a diagram. This is how it opens.</p>
+<p>PR #33 of <a href="https://github.com/gagoar/typescript-patterns-enforcer/pull/33">typescript-patterns-enforcer</a> already had a pr-brief description. A cold reader still stopped 12 times on it. This is how it opens.</p>
 <p class="label">Before</p>
 <blockquote class="before"><p>The edit hook misses files that Claude writes through a shell. This change adds a hook that runs when Claude stops. It finds the TypeScript files changed during the session and runs the same checks on them. It shows the findings to the user and never blocks the session. This closes the gap that let a whole module skip every rule in the audit on PR 31.</p></blockquote>
 <p>After (shortened with [...]):</p>
 <blockquote class="before"><p>This PR adds a hook that checks TypeScript files at the end of a Claude Code session, including files that Claude wrote through a shell. The earlier hook does not see those files. The new hook only warns the user. It never blocks anything.</p><p>Claude writes a file with a shell heredoc in the project folder: <code>export const x: any = 1;</code> [...] When the session stops, the new hook prints this on stdout (shortened) and exits with code 0: [...] Each violation line has the line and column, the rule name, the message, and a pointer to the rule text.</p></blockquote>
-<p>The example is real. In the run log, the skill ran the built hook on that file and quoted its output. The rewrite also names what the code could not answer. It says that the text does not explain the audit on PR 31, and it leaves that as an open point.</p>
 <div class="table-scroll"><table><thead><tr><th scope="col"></th><th scope="col">Original</th><th scope="col">After greenhorn</th></tr></thead><tbody><tr><td>Words</td><td>655</td><td>1,010</td></tr><tr><td>Findings of the checker</td><td>0</td><td>0</td></tr><tr><td>Stumbles that a context-free model reader reported</td><td>12</td><td>9</td></tr></tbody></table></div>
-<p>Of the first 12 stumbles, 7 did not come back in the second reading, 5 did, and 4 were new. The text grew by 355 words. The checker passes both versions, because it reads the shape of a text and the original already had a diagram. The reader is a model. These counts show that a fresh reader still stumbles. They do not show that a person finds the text clearer. The run used about $1.43 of model time.</p>
+<p>The example is real. In our run log, the skill ran the built hook on that file and quoted its output. The rewrite also leaves the PR 31 audit as an open point, because the code could not answer it.</p>
+<p>Of the first 12 stumbles, 7 did not come back in the second reading, 5 did, and 4 were new. The reader is a model, so these counts do not show that a person finds the text clearer.</p>
+</section>
+<section id="how-it-works">
+<h2>How it works</h2>
+<ol><li>A reader with no tools and no repo sees only your text and a profile of who the reader is. It lists where it stops.</li><li>Claude answers each gap from your code. If the code does not say, the gap goes on an open list. Claude guesses nothing.</li><li>The rewrite opens with the gist, then one real example, then how it works. A second reader checks the final text and counts which stumbles come back.</li></ol>
+<p><code>/greenhorn:test</code> runs only the first step and rewrites nothing.</p>
 </section>
 <section id="how-we-got-here">
 <h2>Why we built it this way</h2>
-<p>We did not start from the papers. We started from a design, attacked it, and then read the papers. Some of what we believed did not survive. This is what did, with what each study did and what it cannot tell us. <a href="evidence.html">The full account</a> lists every source. Each paper name below links to the paper. Two links go to the publisher page, where the full text may need access.</p>
-<h3>1. The author cannot find their own gaps</h3>
-<p><strong>The study.</strong> <a href="https://www.cmu.edu/dietrich/sds/docs/loewenstein/CurseknowledgeEconSet.pdf">Camerer, Loewenstein and Weber (1989)</a> ran economic experiments. People who knew a company's real earnings guessed what less informed people would estimate. What they knew biased them, and they did not fully ignore it. Markets cut the bias by about half. Feedback alone did not appear to reduce it.</p>
-<p><strong>What we built.</strong> A cold reader that sees only the text and a profile of who the reader is. It never sees your repository. It lists where it stops.</p>
-<p><strong>What we do not know.</strong> The task was forecasting, not writing. It does not show that your text is harder to read.</p>
-<h3>2. Show a worked example</h3>
-<p><strong>The study.</strong> In four experiments, <a href="https://doi.org/10.1207/s1532690xci0201_3">Sweller and Cooper (1985)</a> taught algebra to Year 8 and Year 9 students, 20 to 40 in each experiment. Students who studied worked examples spent less time in practice in three of the four experiments. In the fourth, the researchers matched the time. On later problems with the same structure, they were faster and made fewer errors, with one exception. In one experiment, the groups that did the different-structure problems first showed no difference on either kind. They had no advantage on problems with a different structure.</p>
-<p><strong>What we built.</strong> One concrete example with real values, before the mechanism.</p>
-<p><strong>What we do not know.</strong> The subject was algebra, in small groups, and the test compared examples with solving problems, not with definitions. The benefit may not carry over to new cases, so our eval tests new cases.</p>
-<h3>3. Examples and definitions together</h3>
-<p><strong>The study.</strong> <a href="https://www.larryjacoby.ca/images/Rawson2015.pdf">Rawson, Thomas and Jacoby (2015)</a> enrolled 131, 176 and 197 undergraduates in three experiments. In the main analyses, students who studied examples classified examples better than students who only re-studied definitions. The effect sizes in the results run from 0.40 to 1.43. The abstract reports 0.74 to 1.67. The two orders, example first or definition first, did not differ significantly.</p>
-<p><strong>What we built.</strong> Every term gets a definition, and the text carries a real example. The example comes first as a design choice. We claim no benefit from that order. Our default of one example is also a choice, not a finding.</p>
-<p><strong>What we do not know.</strong> The concepts were short and the test came soon after study. The study did not use documents.</p>
-<h3>4. Put the word next to the thing it explains</h3>
-<p><strong>The study.</strong> <a href="https://doi.org/10.1111/j.2044-8279.1992.tb01017.x">Chandler and Sweller (1992)</a> ran two experiments. Novices learned from material in which text and diagrams, or parts that refer to each other, sat together. The groups with the integrated material scored higher. In the first experiment, 4 of 10 items differed individually, and the authors call the effects at best moderate. In the second experiment they also spent less time, 190 seconds against 216. The authors call that significant at t(18) = 1.85, which is weaker than the usual two-sided cutoff. One experiment tested 20 apprentices and the other tested 20 university students.</p>
-<p><strong>What we built.</strong> Each term gets its definition at its first use, not in a block at the top.</p>
-<p><strong>What we do not know.</strong> The material was instructions and one report, not jargon. The authors warn that experts, or harder reports, may give different results.</p>
-<h3>5. Jargon changes how reading feels</h3>
-<p><strong>The study.</strong> <a href="https://comm.osu.edu/sites/comm.osu.edu/files/PUS%202019-%20Bullock%20et%20al..pdf">Bullock and colleagues (2019)</a> recruited 650 online readers, and about 640 were in the analysis. They read short science texts. Jargon lowered how fluent the text felt, 4.57 against 5.27 on a seven-point scale. Hover-over definitions had no significant effect on that feeling.</p>
-<p><strong>What we built.</strong> greenhorn warns when a text defines more than five terms. No study backs that number.</p>
-<p><strong>What we do not know.</strong> The study measured how the text felt, not whether people understood it. The definitions were hover text, not inline text.</p>
-<h3>6. Help for beginners can hurt experts</h3>
-<p><strong>The study.</strong> <a href="https://mrbartonmaths.com/resourcesnew/8.%20Research/Explicit%20Instruction/The%20Expertise%20Reversal%20Effect.pdf">Kalyuga, Ayres, Chandler and Sweller (2003)</a> reviewed studies of techniques that help beginners. For more experienced learners, those techniques can lose their effect and can even have negative effects.</p>
-<p><strong>What we built.</strong> The output is easy to skip, and you choose a profile that says who the reader is.</p>
-<p><strong>What we do not know.</strong> We know those studies only through the review, and none of them tests a skippable section.</p>
-</section>
-<section id="what-nobody-has-tested">
-<h2>What nobody has tested</h2>
+<p>We started from a design, attacked it, and then read the papers. Each paper name links to the paper. Two links go to the publisher page, where the full text may need access.</p>
+<div class="table-scroll"><table><thead><tr><th scope="col">Paper</th><th scope="col">What it found</th><th scope="col">What we built</th><th scope="col">What we do not know</th></tr></thead><tbody><tr><td><a href="https://www.cmu.edu/dietrich/sds/docs/loewenstein/CurseknowledgeEconSet.pdf">Camerer, Loewenstein and Weber (1989)</a></td><td>What informed people knew biased them, and they did not fully ignore it. Markets cut the bias by about half.</td><td>A cold reader that sees only the text</td><td>A forecasting task, not writing</td></tr><tr><td><a href="https://doi.org/10.1207/s1532690xci0201_3">Sweller and Cooper (1985)</a></td><td>Worked examples helped on later problems with the same structure, with one exception. They did not help on problems with a different structure.</td><td>One real example before the mechanism</td><td>Algebra, small groups. Our eval tests new cases.</td></tr><tr><td><a href="https://www.larryjacoby.ca/images/Rawson2015.pdf">Rawson, Thomas and Jacoby (2015)</a></td><td>Students who studied examples classified examples better than students who only re-studied definitions. The two orders did not differ significantly.</td><td>Terms defined, a real example, no claim about order</td><td>Short concepts, a short delay</td></tr><tr><td><a href="https://doi.org/10.1111/j.2044-8279.1992.tb01017.x">Chandler and Sweller (1992)</a></td><td>Novices scored higher with the explanation next to the thing it explains.</td><td>Each term defined at its first use</td><td>One report, not jargon. 20 tested in each experiment.</td></tr><tr><td><a href="https://comm.osu.edu/sites/comm.osu.edu/files/PUS%202019-%20Bullock%20et%20al..pdf">Bullock and colleagues (2019)</a></td><td>Jargon lowered felt fluency, 4.57 against 5.27 on a seven-point scale. Hover-over definitions had no significant effect.</td><td>A warning above five defined terms. No study backs that number.</td><td>Felt fluency, not understanding. Hover text, not inline.</td></tr><tr><td><a href="https://mrbartonmaths.com/resourcesnew/8.%20Research/Explicit%20Instruction/The%20Expertise%20Reversal%20Effect.pdf">Kalyuga, Ayres, Chandler and Sweller (2003)</a></td><td>Help for beginners can lose its effect, and can even have negative effects, for more experienced learners.</td><td>Output that is easy to skip, and reader profiles</td><td>We know the studies only through the review</td></tr></tbody></table></div>
 <p>Our hypothesis: a newcomer follows technical text better when three things hold. A reader with no context marks where they get lost. Claude fills each gap from the real source. The text opens with one concrete example.</p>
-<p>No study tests this combination on technical documents for software newcomers. The method is a hypothesis.</p>
-<p>We wrote the human eval. It has no results yet. <a href="https://github.com/gagoar/greenhorn/blob/main/eval/README.md">Read the protocol</a>. If you run it, send us the result. We publish it even if the result is a tie.</p>
+<p>No study tests this combination on technical documents for software newcomers. The method is a hypothesis. <a href="https://github.com/gagoar/greenhorn/blob/main/eval/README.md">Read the human eval protocol</a>. It has no results yet. If you run it, send us the result. We publish it even if the result is a tie.</p>
 </section>
 <section id="we-checked-ourselves">
 <h2>We checked ourselves</h2>
-<p>On 2 November 2026 we asked five separate Claude agents to read every claim on our evidence page again, against the text of each paper. They found errors that our first check missed. The Sweller and Cooper first experiment had 62 students, not the 18 we wrote. Chandler and Sweller tested 20 of 26 apprentices, not 26. We wrote that people in the Camerer study could not ignore what they knew. The paper shows a partial bias.</p>
-<p>We fixed all of it in public. The agents are models too. They quoted the paper text, so a person can check each finding. <a href="evidence.html">See the account</a>.</p>
+<p>On 2 November 2026 we asked five separate Claude agents to read every claim on our evidence page again, against the text of each paper. They found errors that our first check missed. The Sweller and Cooper first experiment had 62 students, not the 18 we wrote. Chandler and Sweller tested 20 of 26 apprentices, not 26.</p>
+<p>We rewrote those lines in public. The agents are models too. They quoted the paper text, so a person can check each finding. <a href="evidence.html">See the account</a>.</p>
 </section>
 <section id="what-it-touches">
 <h2>What it touches</h2>
-<ul><li>It reads the text that you give it. It reads your repository when it answers a stumble.</li><li>The reader agent has no tools and sees only the text. This relies on Claude Code behavior that the docs do not describe. We tested it in version 2.1.316, and a test keeps the settings.</li><li><code>/greenhorn:explain</code> pre-approves writes only under <code>.greenhorn/</code> in your project, and runs only its own two checker scripts, with any arguments after the <code>.greenhorn/</code> path. <code>/greenhorn:test</code> writes nothing. These settings are a guard, not a sandbox.</li><li>The scripts are TypeScript with no dependency. The two checker scripts import only Node's file module and each other. They make no network call and read no environment variable.</li><li>MIT license. No account, no token and no telemetry in the scripts.</li></ul>
+<ul><li>It reads your text, and your repository when it answers a stumble. The reader agent has no tools and sees only the text. This relies on Claude Code behavior that the docs do not describe. We tested it in version 2.1.316, and a test keeps the settings.</li><li><code>/greenhorn:explain</code> pre-approves writes only under <code>.greenhorn/</code> in your project. It runs only its own two checker scripts, with any arguments after the <code>.greenhorn/</code> path. <code>/greenhorn:test</code> writes nothing. These settings are a guard, not a sandbox.</li><li>The scripts are TypeScript with no dependency. The two checker scripts import only Node's file module and each other. They make no network call and read no environment variable.</li><li>MIT license. No account, no token and no telemetry in the scripts.</li></ul>
 </section>
 <section id="what-it-cannot-do">
 <h2>What it cannot do</h2>
-<p>The reader is a model. It is not a human newcomer. It finds likely stumbles. A clean result does not prove that a text is clear. The final test is a real person.</p>
+<p>The reader is a model, not a human newcomer. A clean result does not prove that a text is clear. The final test is a real person.</p>
 <p>We have not tested the limits, such as 5 terms per text. They are defaults. The checker reads the shape of a text. It cannot tell whether a definition is true.</p>
 </section>
 <section id="install">
 <h2>Install</h2>
 <pre><code>/plugin marketplace add gagoar/gago-plugins
 /plugin install greenhorn@gago-plugins</code></pre>
-<p>The install uses two commands. The helper plugins <code>unmistakable</code> and <code>iceberg</code> come with greenhorn. If one is missing, <code>/greenhorn:explain</code> stops and prints the command to install it. The <a href="guide.html">guide</a> lists every command.</p>
-<p>The same author wrote <a href="https://gagoar.github.io/foghorn/">foghorn</a>, which writes technical release notes in the same spirit.</p>
-</section>
-<section id="about-the-name">
-<h2>About the name</h2>
+<p>The helper plugins <code>unmistakable</code> and <code>iceberg</code> come with greenhorn. If one is missing, <code>/greenhorn:explain</code> stops and prints the command to install it. The <a href="guide.html">guide</a> lists every command.</p>
 <p>A greenhorn is a newcomer. We named the plugin for the reader it writes for.</p>
 </section>
 </main>
