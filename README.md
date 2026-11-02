@@ -121,7 +121,7 @@ These numbers are untested defaults. No study backs them. They are guesses until
 
 [coldread](https://github.com/patrykwiener/coldread) by patrykwiener solves a related problem: it makes session context readable to a reader who was outside the session. greenhorn targets a different gap, the domain concepts that a newcomer lacks.
 
-We started with a terms block at the top of the pull request description. Then we read the papers. In the one direct test (Rawson et al. 2015, 131, 176 and 197 university students), performance was similar when examples came before or after the definition, so we dropped our own claim about order. What is left is a hypothesis that we are testing: a newcomer follows technical text better when a reader with no context marks where they get lost, when every gap is filled from the real source, and when the text opens with one concrete example. No study tests this combination, and the defaults above are untested.
+We started with a terms block at the top of the pull request description. Then we read the papers. In the one paper that tests the order (Rawson et al. 2015, two experiments with about 25 students per group), the two orders did not differ significantly, so we dropped our own claim about order. What is left is a hypothesis that we are testing: a newcomer follows technical text better when a reader with no context marks where they get lost, when every gap is filled from the real source, and when the text opens with one concrete example. No study tests this combination, and the defaults above are untested.
 
 [How we got here](https://gagoar.github.io/greenhorn/evidence.html) tells the whole account and lists every source with its read status.
 
