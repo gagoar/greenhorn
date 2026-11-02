@@ -1,0 +1,38 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "greenhorn",
+  "owner": {
+    "name": "gagoar",
+    "url": "https://github.com/gagoar"
+  },
+  "allowCrossMarketplaceDependenciesOn": [
+    "gago-plugins"
+  ],
+  "metadata": {
+    "description": "Write technical text so a newcomer can follow it. A stumble test finds where a stranger gets lost, each gap is answered from your code, and a real example comes first.",
+    "version": "0.1.0"
+  },
+  "plugins": [
+    {
+      "name": "greenhorn",
+      "source": "./",
+      "description": "Write technical text so a newcomer can follow it. A stumble test finds where a stranger gets lost, each gap is answered from your code, and a real example comes first.",
+      "version": "0.1.0",
+      "author": {
+        "name": "gagoar",
+        "url": "https://github.com/gagoar"
+      },
+      "homepage": "https://gagoar.github.io/greenhorn/",
+      "license": "MIT",
+      "keywords": [
+        "technical-writing",
+        "plain-language",
+        "documentation",
+        "onboarding",
+        "pull-request",
+        "jargon"
+      ],
+      "category": "productivity"
+    }
+  ]
+}

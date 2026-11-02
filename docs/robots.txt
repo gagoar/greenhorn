@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://gagoar.github.io/greenhorn/sitemap.xml

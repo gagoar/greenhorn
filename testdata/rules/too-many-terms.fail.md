@@ -1,0 +1,6 @@
+- **Tag**: a label that marks one commit.
+- **Release**: a published build of one tag.
+- **Branch**: a moving pointer to a commit.
+- **Remote**: a copy of the repository on a server.
+- **Fork**: a copy of a remote under another account.
+- **Merge**: a commit that joins two branches.

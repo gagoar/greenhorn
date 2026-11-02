@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>greenhorn guide: write for readers who do not know your system</title>
+<meta name="description" content="How to use /greenhorn:explain and /greenhorn:test in Claude Code. Reader profiles, the config file, the checks that fail and the checks that warn, local use with no CI, and answers to common questions. Plain language for PR description clarity.">
+<meta name="theme-color" content="#2E2160">
+<link rel="icon" type="image/svg+xml" href="assets/icon.svg">
+<link rel="canonical" href="https://gagoar.github.io/greenhorn/guide.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="greenhorn">
+<meta property="og:title" content="greenhorn guide: write for readers who do not know your system">
+<meta property="og:description" content="How to use /greenhorn:explain and /greenhorn:test in Claude Code. Reader profiles, the config file, the checks that fail and the checks that warn, local use with no CI, and answers to common questions. Plain language for PR description clarity.">
+<meta property="og:url" content="https://gagoar.github.io/greenhorn/guide.html">
+<meta property="og:image" content="https://gagoar.github.io/greenhorn/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="greenhorn: a rubber duck on a pier at sunset, next to a suitcase">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="greenhorn guide: write for readers who do not know your system">
+<meta name="twitter:description" content="How to use /greenhorn:explain and /greenhorn:test in Claude Code. Reader profiles, the config file, the checks that fail and the checks that warn, local use with no CI, and answers to common questions. Plain language for PR description clarity.">
+<meta name="twitter:image" content="https://gagoar.github.io/greenhorn/assets/og.png">
+<link rel="stylesheet" href="assets/site.css">
+<script type="application/ld+json">{
+ "@context": "https://schema.org",
+ "@type": "HowTo",
+ "name": "Install and run greenhorn in Claude Code",
+ "description": "How to use /greenhorn:explain and /greenhorn:test in Claude Code. Reader profiles, the config file, the checks that fail and the checks that warn, local use with no CI, and answers to common questions. Plain language for PR description clarity.",
+ "step": [
+  {
+   "@type": "HowToStep",
+   "position": 1,
+   "name": "Add the greenhorn marketplace: /plugin marketplace add gagoar/greenhorn",
+   "text": "Add the greenhorn marketplace: /plugin marketplace add gagoar/greenhorn"
+  },
+  {
+   "@type": "HowToStep",
+   "position": 2,
+   "name": "Add the marketplace for the two helper plugins: /plugin marketplace add gagoar/gago-plugins",
+   "text": "Add the marketplace for the two helper plugins: /plugin marketplace add gagoar/gago-plugins"
+  },
+  {
+   "@type": "HowToStep",
+   "position": 3,
+   "name": "Install the helpers: /plugin install unmistakable@gago-plugins and /plugin install iceberg@gago-plugins",
+   "text": "Install the helpers: /plugin install unmistakable@gago-plugins and /plugin install iceberg@gago-plugins"
+  },
+  {
+   "@type": "HowToStep",
+   "position": 4,
+   "name": "Install greenhorn: /plugin install greenhorn@greenhorn",
+   "text": "Install greenhorn: /plugin install greenhorn@greenhorn"
+  },
+  {
+   "@type": "HowToStep",
+   "position": 5,
+   "name": "Run it on a file: /greenhorn:explain path/to/text.md",
+   "text": "Run it on a file: /greenhorn:explain path/to/text.md"
+  }
+ ]
+}</script>
+<script type="application/ld+json">{
+ "@context": "https://schema.org",
+ "@type": "BreadcrumbList",
+ "itemListElement": [
+  {
+   "@type": "ListItem",
+   "position": 1,
+   "name": "greenhorn",
+   "item": "https://gagoar.github.io/greenhorn/"
+  },
+  {
+   "@type": "ListItem",
+   "position": 2,
+   "name": "Guide",
+   "item": "https://gagoar.github.io/greenhorn/guide.html"
+  }
+ ]
+}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="hero hero-sm"><div class="wrap"><nav class="nav" aria-label="Main"><a class="brand" href="index.html"><img src="assets/icon.svg" alt="" width="32" height="32">greenhorn</a><a href="index.html">Home</a><a href="guide.html" aria-current="page">Guide</a><a href="evidence.html">Evidence</a><a href="https://github.com/gagoar/greenhorn">GitHub</a></nav><div class="hero-body"><div class="hero-text"><h1>Guide</h1></div></div></div></header>
+<main id="main">
+<section id="install">
+<h2>Install</h2>
+<ol><li>Add the greenhorn marketplace: <code>/plugin marketplace add gagoar/greenhorn</code></li><li>Add the marketplace for the two helper plugins: <code>/plugin marketplace add gagoar/gago-plugins</code></li><li>Install the helpers: <code>/plugin install unmistakable@gago-plugins</code> and <code>/plugin install iceberg@gago-plugins</code></li><li>Install greenhorn: <code>/plugin install greenhorn@greenhorn</code></li><li>Run it on a file: <code>/greenhorn:explain path/to/text.md</code></li></ol>
+</section>
+<section id="the-two-commands">
+<h2>The two commands</h2>
+<p><code>/greenhorn:explain</code> rewrites a text for a reader who is new to the system. It takes a file path or pasted text. It never changes your file. It writes the draft to <code>.greenhorn/draft.md</code> in your working directory.</p>
+<p><code>/greenhorn:test</code> only finds the places where such a reader would stop. It rewrites nothing.</p>
+<p>Both take <code>--profile smart-outsider</code>, <code>--profile adjacent-engineer</code> or <code>--profile new-hire</code>.</p>
+<h3>What explain does, in order</h3>
+<ol start="0"><li><strong>Dependency check.</strong> Stop when <code>asd-ste100</code> or <code>iceberg:edit</code> is missing.</li><li><strong>Input and profile.</strong> Get the text and pick who the reader is.</li><li><strong>Stumble pass.</strong> The <code>greenhorn-reader</code> agent gets the text and the profile. It has no tools and no repository access. It lists each stumble with a question. It writes one sentence for what it thinks the text says.</li><li><strong>Ground pass.</strong> Claude answers each stumble from the code, the linked issue or the docs. An answer with no source goes to an <code>unsure</code> list and becomes a question for you.</li><li><strong>Rewrite.</strong> One-sentence gist, one concrete example with real values, then the mechanism. The rewrite defines each term at first use as "X is a Y that does Z". An analogy appears only with a stated limit.</li><li><strong>Check.</strong> <code>scripts/check-text.ts</code> runs.</li><li><strong>Polish.</strong> The <code>asd-ste100</code> skill, then <code>iceberg:edit --no-em-dash</code>.</li><li><strong>Lint loop.</strong> At most 3 rounds. Explain never weakens the text to pass.</li><li><strong>Report.</strong> The final text, the stumbles, the <code>unsure</code> list and the warnings that remain.</li></ol>
+<p>If the stumble pass finds nothing and the gist matches your intent, explain prints the text as it is. A text that already reads well gets worse when you add scaffolding.</p>
+</section>
+<section id="reader-profiles">
+<h2>Reader profiles</h2>
+<p>A profile says who is reading. There are three.</p>
+<div class="table-scroll"><table><thead><tr><th scope="col">Profile</th><th scope="col">Who it is</th></tr></thead><tbody><tr><td><code>smart-outsider</code></td><td>A sharp reader from another field. Does not know the domain and does not read code.</td></tr><tr><td><code>adjacent-engineer</code></td><td>An engineer who writes code but is new to this product. This is the default.</td></tr><tr><td><code>new-hire</code></td><td>A person who knows the company and its customers but has not met this system yet.</td></tr></tbody></table></div>
+<p>Each profile has a <code>knows</code> list and a <code>doesNotKnow</code> list. The reader agent uses both.</p>
+</section>
+<section id="the-config-file">
+<h2>The config file</h2>
+<p>Copy <code>greenhorn.config.example.json</code> to <code>greenhorn.config.json</code> in your working directory. The schema is <code>schema/greenhorn.schema.json</code>. The file sets the default <code>profile</code> and the limits.</p>
+<div class="table-scroll"><table><thead><tr><th scope="col">Limit</th><th scope="col">Default</th></tr></thead><tbody><tr><td><code>maxTerms</code></td><td>5</td></tr><tr><td><code>glossaryThreshold</code></td><td>3</td></tr><tr><td><code>maxDefinitionWords</code></td><td>25</td></tr><tr><td><code>requireExample</code></td><td>true</td></tr><tr><td><code>analogyNeedsLimit</code></td><td>true</td></tr></tbody></table></div>
+<p>These numbers are untested defaults. They are guesses until the human eval says otherwise.</p>
+</section>
+<section id="the-checks">
+<h2>The checks</h2>
+<pre><code>node scripts/check-text.ts [--json] [--config PATH] [--profile NAME] [--disable id,id] [--] [FILE...]</code></pre>
+<p>If you give no file, it reads stdin. Exit 0 means no hard failure. Exit 1 means a hard failure. Exit 2 means a usage error.</p>
+<div class="table-scroll"><table><thead><tr><th scope="col">Check</th><th scope="col">Level</th><th scope="col">What it finds</th></tr></thead><tbody><tr><td><code>circular-definition</code></td><td class="hard">hard</td><td>A definition that uses its own term, or a term that the text defines later</td></tr><tr><td><code>no-example</code></td><td class="hard">hard</td><td>No closed code block with text in it, no "Example" line with content and no Before and After pair of labels</td></tr><tr><td><code>unclosed-fence</code></td><td class="warn">warn</td><td>A code fence that never closes</td></tr><tr><td><code>term-before-definition</code></td><td class="warn">warn</td><td>A term used before the line that defines it</td></tr><tr><td><code>undefined-repeated-term</code></td><td class="warn">warn</td><td>A code-font, CamelCase or all-capitals name used 3 or more times and never defined. It gives false alarms</td></tr><tr><td><code>too-many-terms</code></td><td class="warn">warn</td><td>More defined terms than the limit</td></tr><tr><td><code>long-definition</code></td><td class="warn">warn</td><td>A definition longer than the limit</td></tr><tr><td><code>analogy-without-limit</code></td><td class="warn">warn</td><td>"like a" or "think of ... as" with no "unlike", "differs from", "breaks down", "the difference is" or "but ... not" in the next two sentences</td></tr></tbody></table></div>
+<p>A hard check fails the run. A warn check only reports. Each warn check can be wrong.</p>
+</section>
+<section id="local-use-no-ci">
+<h2>Local use, no CI</h2>
+<p>greenhorn runs on your machine, inside your Claude Code session. The scripts use only Node built-in modules. Node 22.18 or later runs them as they are. There is no build step and no network call. The plugin collects no data.</p>
+<p>You can run the checker alone, by hand, on any Markdown file. It needs no CI.</p>
+</section>
+<section id="faq">
+<h2>FAQ</h2>
+<p><strong>Does it prove my text is clear?</strong><br>
+No. The reader is a model. It finds likely stumbles. A real newcomer is the final test.</p>
+<p><strong>Will it invent a definition when it does not know one?</strong><br>
+No. A term that the code, the issue or the docs do not support goes to the <code>unsure</code> list. You get the question.</p>
+<p><strong>Why does it want an example in every text?</strong><br>
+The checker fails a text with no example. The method puts one real example before the mechanism. This is a hypothesis, not a proven rule.</p>
+<p><strong>Why only 5 terms?</strong><br>
+It is a default, not a finding. Change <code>maxTerms</code> in your config.</p>
+<p><strong>Where does my text go?</strong><br>
+It goes to the Claude model in your session, like any prompt. The reader agent gets only the text and the profile.</p>
+<p><strong>Can I use my own style flags?</strong><br>
+The polish step uses <code>--no-em-dash</code> and no other flag.</p>
+<p><strong>Where do I report a bug?</strong><br>
+Open an issue on <a href="https://github.com/gagoar/greenhorn/issues">GitHub</a>.</p>
+</section>
+</main>
+<footer class="foot"><div class="wrap"><p>MIT &middot; v0.1.0 &middot; by <a href="https://github.com/gagoar">gagoar</a></p><p>Icon: &ldquo;Bath toy&rdquo; by SUPRIYANTO YANTO (kamalm030391), from Noun Project, recolored. <a href="https://github.com/gagoar/greenhorn/blob/main/CREDITS.md">Credits</a></p><p class="links"><a href="https://github.com/gagoar/greenhorn">Source</a><a href="https://github.com/gagoar/greenhorn/issues">Issues</a></p></div></footer>
+</body>
+</html>

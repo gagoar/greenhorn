@@ -1,0 +1,40 @@
+{
+  "name": "greenhorn",
+  "displayName": "greenhorn",
+  "version": "0.1.0",
+  "icon": "./.claude-plugin/icon.png",
+  "description": "Write technical text so a newcomer can follow it. A stumble test finds where a stranger gets lost, each gap is answered from your code, and a real example comes first.",
+  "author": {
+    "name": "gagoar",
+    "url": "https://github.com/gagoar"
+  },
+  "homepage": "https://gagoar.github.io/greenhorn/",
+  "documentationUrl": "https://gagoar.github.io/greenhorn/guide.html",
+  "supportUrl": "https://github.com/gagoar/greenhorn/issues",
+  "privacyPolicyUrl": "https://github.com/gagoar/greenhorn#privacy",
+  "termsOfServiceUrl": "https://github.com/gagoar/greenhorn#terms",
+  "repository": "https://github.com/gagoar/greenhorn",
+  "license": "MIT",
+  "keywords": [
+    "technical-writing",
+    "plain-language",
+    "documentation",
+    "onboarding",
+    "pull-request",
+    "jargon"
+  ],
+  "skills": [
+    "./skills/explain",
+    "./skills/test"
+  ],
+  "dependencies": [
+    {
+      "name": "unmistakable",
+      "marketplace": "gago-plugins"
+    },
+    {
+      "name": "iceberg",
+      "marketplace": "gago-plugins"
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+# greenhorn
+
+> A Claude Code plugin that rewrites technical text for a reader who is new to your system. A read-only agent finds where a newcomer gets lost, Claude answers each gap from your code, and the rewrite puts one real example first. A fixed checker fails on a circular definition and on a missing example.
+
+greenhorn has two commands: /greenhorn:explain (rewrite) and /greenhorn:test (find stumbles only). A model reader is not a human newcomer. The default limits, such as 5 terms, are untested guesses.
+
+## Docs
+
+- [Home](https://gagoar.github.io/greenhorn/): what it does, a real before and after, install
+- [Guide](https://gagoar.github.io/greenhorn/guide.html): commands, reader profiles, config, checks, FAQ
+- [Evidence](https://gagoar.github.io/greenhorn/evidence.html): what we verified and did not, prior art, the human eval
+
+## For agents working with greenhorn
+
+- [README](https://raw.githubusercontent.com/gagoar/greenhorn/main/README.md)
+- [explain SKILL.md](https://raw.githubusercontent.com/gagoar/greenhorn/main/skills/explain/SKILL.md): the workflow of /greenhorn:explain
+- [test SKILL.md](https://raw.githubusercontent.com/gagoar/greenhorn/main/skills/test/SKILL.md): the workflow of /greenhorn:test
+- [Human eval protocol](https://raw.githubusercontent.com/gagoar/greenhorn/main/eval/README.md)
+
+## Schemas
+
+- [Config schema](https://raw.githubusercontent.com/gagoar/greenhorn/main/schema/greenhorn.schema.json)
+- [Config example](https://raw.githubusercontent.com/gagoar/greenhorn/main/greenhorn.config.example.json)

@@ -1,0 +1,15 @@
+{
+  "name": "greenhorn",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Scripts behind the greenhorn plugin. No dependencies.",
+  "type": "module",
+  "scripts": {
+    "test": "node --test \"test/*.test.ts\"",
+    "gate": "node scripts/check-plugin-safety.ts .",
+    "typecheck": "tsc -p ."
+  },
+  "engines": {
+    "node": ">=22.18"
+  }
+}

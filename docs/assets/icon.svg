@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" role="img" aria-label="greenhorn: a rubber duck on a pier at sunset, next to a suitcase">
+<title>greenhorn</title>
+<defs>
+<linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2E2160"/><stop offset=".45" stop-color="#8A3F86"/><stop offset=".78" stop-color="#FF8A5C"/><stop offset="1" stop-color="#FFC27A"/></linearGradient>
+<clipPath id="r"><rect width="1024" height="1024" rx="226"/></clipPath>
+</defs>
+<g clip-path="url(#r)">
+<rect width="1024" height="1024" fill="url(#sky)"/>
+<circle cx="832" cy="208" r="144" fill="#FFE3A0" opacity=".2"/>
+<circle cx="832" cy="208" r="96" fill="#FFE3A0"/>
+<rect y="800" width="1024" height="224" fill="#1A1433"/>
+<rect y="800" width="1024" height="28" fill="#2D2350"/>
+<g fill="#2D2350"><rect x="160" y="856" width="12" height="168"/><rect x="480" y="856" width="12" height="168"/><rect x="800" y="856" width="12" height="168"/></g>
+<path d="M0 828H1024M256 800v28M512 800v28M768 800v28" stroke="#15102B" stroke-width="8" fill="none"/>
+<circle cx="703.1" cy="382.6" r="30.6" fill="#fff"/>
+<path transform="translate(289.12 225.73) scale(0.52475)" fill="#FFC93C" fill-rule="evenodd" d="m684.9 97.727c-135.71 0-245.72 110.01-245.72 245.71 0 110.45 72.863 203.87 173.17 234.82-88.414 89.461-187.29 89.477-292.38 89.477-120.15 0-156.29-94.848-188.8-94.848-32.512 0-53.305 45.172-53.305 240.29 0 195.12 177.05 289.08 511.3 289.08s532.99-104.79 532.99-285.46c0-148.61-202.85-255.63-274.89-288.95 22.293-19.645 40.988-43.27 55.008-69.746l152.16-32.473-74.992-39.758c55.785-81.328 94.422-95.77 91.246-185.2l-144.07 98.449c-20.863-114.55-121.14-201.39-241.71-201.39zm104.13 142.87c-32.188 0-58.281 26.078-58.281 58.266 0 32.172 26.094 58.266 58.281 58.266 32.172 0 58.266-26.094 58.266-58.266 0-32.188-26.094-58.266-58.266-58.266z"/>
+<rect x="56" y="664" width="208" height="152" rx="24" fill="#C46A2C"/>
+<rect x="116" y="628" width="88" height="44" rx="20" fill="none" stroke="#8A4718" stroke-width="20"/>
+<rect x="56" y="728" width="208" height="20" fill="#8A4718"/>
+<rect x="144" y="712" width="32" height="40" rx="8" fill="#FFD27A"/>
+</g></svg>

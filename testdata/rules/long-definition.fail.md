@@ -1,0 +1,1 @@
+- **Tag**: a label that a person or a script attaches to exactly one commit so that the team can find that commit again later, when the branches have moved on and the history has grown long.

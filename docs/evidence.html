@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>greenhorn evidence: what we verified and what we did not</title>
+<meta name="description" content="What the greenhorn Claude Code plugin has tested and what it has not. Supporting reading on concreteness fading, analogies and worked examples. How it differs from coldread. The human eval protocol, and the defaults that are untested.">
+<meta name="theme-color" content="#2E2160">
+<link rel="icon" type="image/svg+xml" href="assets/icon.svg">
+<link rel="canonical" href="https://gagoar.github.io/greenhorn/evidence.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="greenhorn">
+<meta property="og:title" content="greenhorn evidence: what we verified and what we did not">
+<meta property="og:description" content="What the greenhorn Claude Code plugin has tested and what it has not. Supporting reading on concreteness fading, analogies and worked examples. How it differs from coldread. The human eval protocol, and the defaults that are untested.">
+<meta property="og:url" content="https://gagoar.github.io/greenhorn/evidence.html">
+<meta property="og:image" content="https://gagoar.github.io/greenhorn/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="greenhorn: a rubber duck on a pier at sunset, next to a suitcase">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="greenhorn evidence: what we verified and what we did not">
+<meta name="twitter:description" content="What the greenhorn Claude Code plugin has tested and what it has not. Supporting reading on concreteness fading, analogies and worked examples. How it differs from coldread. The human eval protocol, and the defaults that are untested.">
+<meta name="twitter:image" content="https://gagoar.github.io/greenhorn/assets/og.png">
+<link rel="stylesheet" href="assets/site.css">
+<script type="application/ld+json">{
+ "@context": "https://schema.org",
+ "@type": "BreadcrumbList",
+ "itemListElement": [
+  {
+   "@type": "ListItem",
+   "position": 1,
+   "name": "greenhorn",
+   "item": "https://gagoar.github.io/greenhorn/"
+  },
+  {
+   "@type": "ListItem",
+   "position": 2,
+   "name": "Evidence",
+   "item": "https://gagoar.github.io/greenhorn/evidence.html"
+  }
+ ]
+}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="hero hero-sm"><div class="wrap"><nav class="nav" aria-label="Main"><a class="brand" href="index.html"><img src="assets/icon.svg" alt="" width="32" height="32">greenhorn</a><a href="index.html">Home</a><a href="guide.html">Guide</a><a href="evidence.html" aria-current="page">Evidence</a><a href="https://github.com/gagoar/greenhorn">GitHub</a></nav><div class="hero-body"><div class="hero-text"><h1>Evidence</h1><p class="lead">greenhorn is a hypothesis with working code. This page says what is checked and what is not.</p></div></div></div></header>
+<main id="main">
+<section id="what-we-verified">
+<h2>What we verified</h2>
+<ul><li>The checker finds what the table in the guide says it finds. Every check has a passing and a failing test file in <code>testdata/rules/</code>. A test fails if one is missing.</li><li>The checker ran on the before and after pair in the README. The output on the home page is the real output.</li><li>The scripts use no dependency and make no network call.</li></ul>
+</section>
+<section id="what-we-did-not-verify">
+<h2>What we did not verify</h2>
+<ul><li>That a text made with greenhorn is easier for a human to understand. No human has tested it yet.</li><li>That the model reader predicts what a human newcomer stumbles on.</li><li>That example-first beats definition-first. We know of no study that compares them.</li><li>Any number in the defaults. See below.</li><li>We have not recorded a reading of the primary paper for each work in the next section. We cite no figure from them.</li></ul>
+</section>
+<section id="supporting-reading">
+<h2>Supporting reading</h2>
+<p>This is supporting reading, not proof for this tool. The design leans on these works.</p>
+<ul><li>Concreteness fading: <a href="https://link.springer.com/article/10.1007/s10648-014-9249-3">Fyfe et al. (2014)</a>. A concrete example first, then a move toward the abstract idea.</li><li>Analogies that mislead: <a href="https://reasoninglab.psych.ucla.edu/wp-content/uploads/sites/273/2021/12/Gray_Holyoak.2021.pdf">Gray and Holyoak (2021)</a>. An analogy can teach a wrong model. This is why greenhorn allows an analogy only with a stated limit.</li><li>The worked-example effect and the expertise reversal effect: the Sweller line of work. A worked example helps a novice. The same help can hurt an expert. This is why greenhorn leaves a text alone when the stumble pass finds nothing.</li></ul>
+</section>
+<section id="untested-defaults">
+<h2>Untested defaults</h2>
+<p>These limits are guesses. No study backs them. They are defaults in <code>greenhorn.config.json</code>. The human eval decides if they change.</p>
+<div class="table-scroll"><table><thead><tr><th scope="col">Limit</th><th scope="col">Default</th></tr></thead><tbody><tr><td><code>maxTerms</code></td><td>5</td></tr><tr><td><code>glossaryThreshold</code></td><td>3</td></tr><tr><td><code>maxDefinitionWords</code></td><td>25</td></tr></tbody></table></div>
+</section>
+<section id="prior-art">
+<h2>Prior art</h2>
+<p><a href="https://github.com/patrykwiener/coldread">coldread</a> by patrykwiener is related. It makes session context readable to a reader who was outside the session.</p>
+<p>greenhorn aims at a different gap: the domain concepts that a newcomer lacks. It differs in these ways:</p>
+<ul><li>The reader agent has no tools and no repository access. It sees only the text and the profile.</li><li>Each gap is answered from the code, the issue or the docs, or it goes to a list of open questions.</li><li>The rewrite puts one real example before the mechanism.</li><li>A fixed TypeScript checker fails on a circular definition and on a missing example.</li></ul>
+<p>We have not compared the two tools on the same documents. We make no claim that one is better.</p>
+</section>
+<section id="the-human-eval">
+<h2>The human eval</h2>
+<p>The reader is a model, and a model is not a human newcomer. The human eval is the missing step. It has not been run. The folder holds no results.</p>
+<p>The protocol compares three versions of each document: the original, the original after polish only, and the full greenhorn rewrite. Fresh readers see one version each. They explain the text in two sentences. Two scorers who do not know the version score each answer from 0 to 2 against the author's intent.</p>
+<p>Read the <a href="https://github.com/gagoar/greenhorn/blob/main/eval/README.md">full protocol</a>. The results will be published even if the result is a tie.</p>
+</section>
+</main>
+<footer class="foot"><div class="wrap"><p>MIT &middot; v0.1.0 &middot; by <a href="https://github.com/gagoar">gagoar</a></p><p>Icon: &ldquo;Bath toy&rdquo; by SUPRIYANTO YANTO (kamalm030391), from Noun Project, recolored. <a href="https://github.com/gagoar/greenhorn/blob/main/CREDITS.md">Credits</a></p><p class="links"><a href="https://github.com/gagoar/greenhorn">Source</a><a href="https://github.com/gagoar/greenhorn/issues">Issues</a></p></div></footer>
+</body>
+</html>

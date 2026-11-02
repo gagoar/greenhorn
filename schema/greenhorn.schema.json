@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "greenhorn config",
+  "description": "Reader profiles and limits for the greenhorn plugin. Every number below is an untested default. No study backs 5 terms, 3 uses or 25 words. The human eval in eval/README.md is how they get tuned, and until it runs they are guesses. Limits layer in this order: built-in defaults, the top-level limits, then the limits of the chosen profile.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "$schema": { "type": "string" },
+    "profile": {
+      "type": "string",
+      "default": "adjacent-engineer",
+      "description": "The profile to use. It must be a key of profiles when profiles is set. Built-in presets in the example file: smart-outsider, adjacent-engineer (default), new-hire."
+    },
+    "limits": { "$ref": "#/$defs/limits" },
+    "profiles": {
+      "type": "object",
+      "additionalProperties": { "$ref": "#/$defs/profile" }
+    }
+  },
+  "$defs": {
+    "limits": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Untested defaults. See the schema description.",
+      "properties": {
+        "maxTerms": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 5,
+          "description": "Most terms one text defines before the too-many-terms warning. Untested default."
+        },
+        "glossaryThreshold": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 3,
+          "description": "A term used this many times earns a glossary block. Also the count at which an undefined repeated name raises a warning. Untested default."
+        },
+        "maxDefinitionWords": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 25,
+          "description": "Most words in one definition before the long-definition warning. Untested default."
+        },
+        "requireExample": {
+          "type": "boolean",
+          "default": true,
+          "description": "When true, a text with no example fails the no-example check."
+        },
+        "analogyNeedsLimit": {
+          "type": "boolean",
+          "default": true,
+          "description": "When true, an analogy with no stated limit raises a warning."
+        }
+      }
+    },
+    "profile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["description"],
+      "properties": {
+        "description": { "type": "string", "description": "Who the reader is, in one or two sentences. The stumble reader gets this text." },
+        "knows": { "type": "array", "items": { "type": "string" }, "description": "What the reader already knows." },
+        "doesNotKnow": { "type": "array", "items": { "type": "string" }, "description": "What the reader has never seen." },
+        "limits": { "$ref": "#/$defs/limits" }
+      }
+    }
+  }
+}

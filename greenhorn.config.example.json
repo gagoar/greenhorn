@@ -1,0 +1,49 @@
+{
+  "$schema": "./schema/greenhorn.schema.json",
+  "profile": "adjacent-engineer",
+  "limits": {
+    "maxTerms": 5,
+    "glossaryThreshold": 3,
+    "maxDefinitionWords": 25,
+    "requireExample": true,
+    "analogyNeedsLimit": true
+  },
+  "profiles": {
+    "smart-outsider": {
+      "description": "A sharp reader from another field. Does not know the domain and does not read code.",
+      "knows": [
+        "everyday words",
+        "general business and technology vocabulary",
+        "how to follow a clear argument"
+      ],
+      "doesNotKnow": [
+        "the product, its parts and its internal names",
+        "programming terms such as commit, hook, schema or regression",
+        "acronyms of the domain"
+      ]
+    },
+    "adjacent-engineer": {
+      "description": "An engineer who writes code but is new to this product. Knows common programming terms, not this system.",
+      "knows": [
+        "programming languages, Git and pull requests",
+        "common web and cloud terms such as HTTP, queue and cache"
+      ],
+      "doesNotKnow": [
+        "the product, its parts and its internal names",
+        "the domain the product serves",
+        "past incidents and the reasons behind past decisions"
+      ]
+    },
+    "new-hire": {
+      "description": "A person who knows the company and its customers but has not met this system yet.",
+      "knows": [
+        "the company, its teams and its customers",
+        "company-wide tools and names"
+      ],
+      "doesNotKnow": [
+        "this system's parts and internal names",
+        "the code and the history of this repository"
+      ]
+    }
+  }
+}

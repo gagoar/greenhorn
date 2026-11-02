@@ -1,0 +1,2 @@
+- **Tag**: a label that marks one commit.
+- **Release**: a published build of one tag.
