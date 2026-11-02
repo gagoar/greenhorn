@@ -76,14 +76,14 @@ It reads stdin when you give no file. Exit 0 means no hard failure. Exit 1 means
 | `no-example` | hard | None of these: a closed code block with text in it, a line that starts with "Example:", "For example" or "e.g." and has content on that line or the next, or a Before and After pair where both are labels (`Before:`, `**Before**`, `## Before`) and not prose |
 | `unclosed-fence` | warn | A code fence that never closes. The text after it is still checked, and the fence is not an example |
 | `term-before-definition` | warn | A term used before the line that defines it |
-| `undefined-repeated-term` | warn | A code-font or CamelCase or all-capitals name used 3 or more times and never defined. It will give false alarms |
+| `undefined-repeated-term` | warn | A code-font name or an all-capitals acronym used 3 or more times and never defined. It skips paths, file names, flags, calls, assignments and a list of universal terms (PR, API, README, SHA, main and the like). It will give false alarms |
 | `too-many-terms` | warn | More defined terms than the limit |
 | `long-definition` | warn | A definition longer than the limit |
 | `analogy-without-limit` | warn | "like a" or "think of ... as" with none of "unlike", "differs from", "breaks down" or "the difference is" in the next two sentences, and no "but ... not" clause (where "not" is not followed by "like") in the analogy sentence or the one after it |
 
 What counts as a definition. The checker joins the lines of a paragraph or list item (at most 12 lines) before it looks. It reads three forms:
 
-- Colon form: `**Term**: body`, with an optional list bullet. The bold labels Note, Warning, Tip, Example, Before, After, Caution and Important are not terms.
+- Colon form: `**Term**: body`, with an optional list bullet. The body must read like a definition: it starts with "a", "an" or "the", or with "is", "are", "means" or "refers to", or it starts with "any", "each", "every", "one", "some" or "all" and has "that" or "which" within 12 words. A body that starts with a digit, a list marker, a link, a code span, a path or a verb in the imperative is not a definition. A body that starts with an article but says "was", "did", "has", "will" or "not" before any "that" or "which" is a statement, not a definition: "**Reason**: the cache was not cleared". The bold labels in a fixed list (Note, Warning, Summary, Risk, Size, Legend, Review order, Cause, Fix and others; see `LABELS` in `scripts/document.ts`) are never terms.
 - Sentence form: "X is a/an Y that ..." or "X are a/an Y that ...", where X is in bold, in code font or a capitalized name. The word `that` is required: "A **cache** is a store" is not a definition.
 - Lowercase form: the same pattern with a plain lowercase X of one or two words, only at the start of a sentence, with an optional "A", "An" or "The" before it. "We think a cache is a store that ..." is not a definition.
 

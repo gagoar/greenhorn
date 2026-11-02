@@ -73,8 +73,31 @@ const PATTERN_SPECIAL = /[.*+?^${}()|[\]\\]/g;
 // Words that start a sentence and are not terms. A sentence such as "It is a tool that" defines nothing.
 const NOT_TERMS: ReadonlySet<string> = new Set(["it", "this", "that", "there", "here", "these", "those", "what", "which", "who", "he", "she", "they", "we", "you", "i"]);
 
-// Bold labels that head a note, not a definition: "**Note**: see below" defines nothing.
-const LABEL_WORDS: ReadonlySet<string> = new Set(["note", "warning", "tip", "example", "before", "after", "caution", "important"]);
+// Bold labels that head a note or a section, not a definition: "**Note**: see below" and "**Review order**: 1. a" define nothing.
+const LABELS: readonly string[] = [
+  "note", "notes", "warning", "tip", "example", "examples", "before", "after", "caution", "important",
+  "summary", "tldr", "tl;dr", "risk", "risks", "why", "what", "how", "size", "legend", "checked", "cause", "fix", "change", "changes",
+  "testing", "test plan", "tests", "review order", "not covered", "screenshots", "context", "background", "motivation", "impact",
+  "rollout", "rollback", "result", "results", "status", "scope", "out of scope", "goal", "goals", "problem", "solution", "decision",
+  "usage", "output", "input", "limitations", "follow-up", "follow-ups", "related", "see also", "reviewers", "reviewer", "list format",
+];
+const LABEL_WORDS: ReadonlySet<string> = new Set(LABELS);
+
+// An article that starts a definition body. Matches "a one-time string", "an agent" and "the store"; rejects "1. foo", "small" and "fix the cache".
+const ARTICLE_BODY = /^(?:an?|the)\s/i;
+// A copula that starts a definition body. Matches "is the store", "are the stores", "means a label" and "refers to a store"; rejects "island" and "see [link]".
+const COPULA_BODY = /^(?:is|are|means|refers to)\s/i;
+
+// A determiner that opens a noun phrase, accepted only when "that" or "which" follows soon. Matches "any string that", "each value which"; rejects "each value".
+const DETERMINER_BODY = /^(?:any|each|every|one|some|all)\s/i;
+
+// The relative word of a definition. Matches "a string that expires" and "a value which holds"; rejects "a string".
+const RELATIVE_WORD = /\b(?:that|which)\b/i;
+
+// A verb or negation that makes a sentence a statement. Matches "the cache was not cleared" and "the job did run"; rejects "a one-time string".
+const STATEMENT_WORD = /\b(?:was|were|did|does|do|has|have|had|will|would|should|must|cannot|not)\b/i;
+
+const RELATIVE_WINDOW_WORDS = 12; // "that" or "which" must come within this many words of the start of a determiner-led body
 
 const SEPARATOR = " "; // joins the lines of a unit; one character, so a column maps back to its line
 const MAX_JOINED_LINES = 12; // a unit never joins more lines than this, so a text with no blank line cannot make the definition regexes slow
@@ -167,13 +190,26 @@ function locate(unit: Unit, offset: number): Position {
 
 const isLabel = (term: string): boolean => LABEL_WORDS.has(term.toLowerCase());
 
+const firstWords = (text: string, count: number): string => text.split(WHITESPACE).slice(0, count).join(SEPARATOR);
+
+// Whether a bold-colon body reads like a definition. The edge: an article-led body with a "was", "did", "has" or "not" before any "that" or "which" is a statement, as in "the cache was not cleared".
+function readsAsDefinition(body: string): boolean {
+  const text = body.trim();
+  if (COPULA_BODY.test(text)) return true;
+  if (DETERMINER_BODY.test(text)) return RELATIVE_WORD.test(firstWords(text, RELATIVE_WINDOW_WORDS));
+  if (!ARTICLE_BODY.test(text)) return false;
+  const before = text.split(RELATIVE_WORD)[0] ?? text;
+  return !STATEMENT_WORD.test(before);
+}
+
 const firstWord = (term: string): string => term.toLowerCase().split(WHITESPACE).slice(0, FIRST).join("");
 
 function colonDefinition(unit: Unit): Definition | undefined {
   const match = BOLD_COLON.exec(unit.text);
   if (!match) return undefined;
   const term = cleanTerm(match[FIRST_GROUP] ?? "");
-  return isLabel(term) ? undefined : { term, body: match[SECOND_GROUP] ?? "", ...locate(unit, unit.text.indexOf("**")) };
+  const body = match[SECOND_GROUP] ?? "";
+  return isLabel(term) || !readsAsDefinition(body) ? undefined : { term, body, ...locate(unit, unit.text.indexOf("**")) };
 }
 
 function sentenceDefinitions(unit: Unit): readonly Definition[] {

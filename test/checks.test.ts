@@ -1,17 +1,32 @@
 import assert from "node:assert/strict";
-import { existsSync } from "node:fs";
+import { existsSync, mkdtempSync, readFileSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
 import { CHECK_IDS } from "../scripts/checks.ts";
 import { definitions, parse } from "../scripts/document.ts";
 import { configFile, json, read, ROOT } from "./helpers.ts";
 
-const rule = (id: string, kind: "pass" | "fail"): string => join("testdata", "rules", `${id}.${kind}.md`);
+// Fixture convention: testdata/rules/<id>.pass.md and <id>.fail.md run with no argument. A check that needs options may add
+// <id>.args.json, an array of CLI arguments (an argument that names a file in testdata/rules, such as "<id>.original.md", is
+// resolved to its full path), and files such as <id>.original.md. The args file applies to both the pass and the fail fixture.
+const RULES_DIR = join("testdata", "rules");
+const rule = (id: string, kind: "pass" | "fail"): string => join(RULES_DIR, `${id}.${kind}.md`);
+
+// The CLI arguments of a check's fixtures: the content of <id>.args.json, with each file name resolved against the rules folder.
+export function fixtureArgs(id: string, dir: string = join(ROOT, RULES_DIR)): readonly string[] {
+  const path = join(dir, `${id}.args.json`);
+  if (!existsSync(path)) return [];
+  const args: readonly string[] = JSON.parse(readFileSync(path, "utf8"));
+  return args.map((arg) => (existsSync(join(dir, arg)) ? join(dir, arg) : arg));
+}
 
 const CIRCULAR = "circular-definition";
 const NO_EXAMPLE = "no-example";
 const TOO_MANY = "too-many-terms";
 const CONFIG = "--config";
+const UNDEFINED_TERM = "undefined-repeated-term";
+const ORIGINAL = "x.original.md";
 const HARD_IDS = [CIRCULAR, NO_EXAMPLE];
 const MIN_CHECKS = 8;
 const TERM_LIMIT = 1;
@@ -33,8 +48,9 @@ test("every check has a pass fixture and a fail fixture", () => {
 
 test("a pass fixture gives no finding for its check, and a fail fixture gives at least one", () => {
   CHECK_IDS.forEach((id) => {
-    assert.equal(count(id, read(rule(id, "pass"))), 0, `${id}.pass.md`);
-    assert.ok(count(id, read(rule(id, "fail"))) >= 1, `${id}.fail.md`);
+    const args = fixtureArgs(id);
+    assert.equal(count(id, read(rule(id, "pass")), args), 0, `${id}.pass.md`);
+    assert.ok(count(id, read(rule(id, "fail")), args) >= 1, `${id}.fail.md`);
   });
 });
 
@@ -81,8 +97,8 @@ test("a config limit changes the result", () => {
   const lenient = configFile({ limits: { requireExample: false } });
   assert.equal(count(NO_EXAMPLE, read(rule(NO_EXAMPLE, "fail")), [CONFIG, lenient]), 0);
   const threshold = configFile({ limits: { glossaryThreshold: TWO_USES } });
-  assert.equal(count("undefined-repeated-term", "Use `retry_limit` twice: `retry_limit`.\n", [CONFIG, threshold]), 1);
-  assert.equal(count("undefined-repeated-term", "Use `retry_limit` twice: `retry_limit`.\n"), 0);
+  assert.equal(count(UNDEFINED_TERM, "Use `retry_limit` twice: `retry_limit`.\n", [CONFIG, threshold]), 1);
+  assert.equal(count(UNDEFINED_TERM, "Use `retry_limit` twice: `retry_limit`.\n"), 0);
 });
 
 test("a profile's limits win over the file's limits", () => {
@@ -186,4 +202,57 @@ test("parse is linear: 400k characters run in a few seconds", () => {
   const report = json([], "x\n".repeat(BIG_LINES));
   assert.ok(Date.now() - started < TIME_LIMIT_MS, `took ${Date.now() - started} ms`);
   assert.ok(report.count >= ONE);
+});
+
+test("fixtureArgs reads <id>.args.json and resolves a named file against the rules folder", () => {
+  const dir = mkdtempSync(join(tmpdir(), "greenhorn-rules-"));
+  writeFileSync(join(dir, ORIGINAL), "old\n");
+  writeFileSync(join(dir, "x.args.json"), JSON.stringify(["--original", ORIGINAL]));
+  assert.deepEqual(fixtureArgs("x", dir), ["--original", join(dir, ORIGINAL)]);
+  assert.deepEqual(fixtureArgs("y", dir), []);
+  assert.deepEqual(fixtureArgs("circular-definition"), []);
+});
+
+test("a bold-colon entry is a definition only when its body reads like one", () => {
+  const REAL: readonly (readonly [name: string, text: string])[] = [
+    ["an article", "**Invite code**: a one-time string that lets a person join.\n"],
+    ["a copula", "**Cache**: is the store that keeps copies.\n"],
+    ["a list bullet", "- **Cache**: the store that keeps copies.\n"],
+    ["a determiner with that", "**Token**: any string that proves who you are.\n"],
+    ["a short noun phrase", "**Tag**: a label\n"],
+  ];
+  REAL.forEach(([name, text]) => assert.equal(terms(text).length, ONE, name));
+  const NOT_REAL: readonly (readonly [name: string, text: string])[] = [
+    ["a label word with a number", "**Review order**: 1. foo\n"],
+    ["a label word with a word", "**Size**: small\n"],
+    ["a label word with a statement", "**Cause**: the cache was not cleared.\n"],
+    ["a non-label with a statement", "**Reason**: the cache was not cleared.\n"],
+    ["a list marker", "**Steps**: - one\n"],
+    ["a link", "**Docs**: [the guide](a.md)\n"],
+    ["a code span", "**Entry**: `src/a.ts` holds it\n"],
+    ["an imperative", "**Start**: open the file\n"],
+    ["a path", "**Where**: docs/a.md\n"],
+    ["a number", "**Count**: 14 files\n"],
+    ["a determiner without that", "**Token**: any string\n"],
+  ];
+  NOT_REAL.forEach(([name, text]) => assert.deepEqual(terms(text), [], name));
+});
+
+test("the label list covers the common section labels, and a label never gives long-definition", () => {
+  const labels = ["Summary", "Risk", "Why", "Legend", "Checked", "Fix", "Testing", "Review order", "Not covered", "Screenshots", "Rollback"];
+  labels.forEach((label) => assert.deepEqual(terms(`**${label}**: a long body that has more than five words in it.\n`), [], label));
+  const long = "**Review order**: the first file, then the second file, then the third file, then the fourth file, then the fifth file, then a sixth.\n";
+  assert.equal(count("long-definition", long), 0);
+});
+
+test("undefined-repeated-term flags a code-font name and an unknown acronym, and skips paths, snippets, flags and universal words", () => {
+  const repeat = (name: string): string => `Use ${name}, then ${name}, then ${name}.\n`;
+  const FLAGGED = ["`retry_limit`", "`StumbleReader`", "STE", "QPS"];
+  FLAGGED.forEach((name) => assert.equal(count(UNDEFINED_TERM, repeat(name)), ONE, name));
+  const SKIPPED = ["`docs/assets/icon.svg`", "`plugin.json`", "`bindScripts()`", "`written=false`", "`--json`", "`main`", "PR", "README", "GitHub", "SHA", "PNG", "JPEG", "DevOps", "SubJunk", "SKILL.md"];
+  SKIPPED.forEach((name) => assert.equal(count(UNDEFINED_TERM, repeat(name)), 0, name));
+});
+
+test("an acronym that the text defines is not flagged", () => {
+  assert.equal(count(UNDEFINED_TERM, "An **STE** is a style that limits words.\nSTE, STE, STE.\n"), 0);
 });

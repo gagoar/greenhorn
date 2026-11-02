@@ -15,7 +15,7 @@ Rules an agent cannot infer from the code:
 - A cap (term count, words per definition) is a default in `greenhorn.config.json`, never a hard-coded number. State in docs that the defaults are untested guesses until the eval says otherwise.
 - Cite a study only after you read the primary paper. `docs/evidence.html` (the "How we got here" page) is the one place that lists sources, each with its read status (read in full, or abstract only). Never write "proven", "evidence-based", "research shows" or "studies show" without a named study and its population.
 - The checker (`scripts/check-text.ts`) fails on a circular definition and on a missing example. Every other finding is a warning.
-- Every check has `testdata/rules/<id>.pass.md` and `<id>.fail.md`. A test fails if one is missing.
+- Every check has `testdata/rules/<id>.pass.md` and `<id>.fail.md`. A test fails if one is missing. A check that needs options may add `<id>.args.json` (an array of CLI arguments; a name that matches a file in `testdata/rules`, such as `<id>.original.md`, becomes its full path) for both fixtures.
 - Prose goes through `asd-ste100` (STE-flavored mode) and then `iceberg:edit`. Write Markdown first, convert to HTML after, and add no prose in the conversion.
 - The footer of every page in `docs/` shows the version in `.claude-plugin/plugin.json`. A test checks it.
 - After a change to `docs/assets/*.html` or `docs/assets/icon.svg`, rebuild the images and commit them.
