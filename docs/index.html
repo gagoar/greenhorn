@@ -3,23 +3,23 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>greenhorn: explain technical text to someone new to your system</title>
-<meta name="description" content="A Claude Code plugin that rewrites technical text for a reader who has never seen your system. It finds where a stranger gets lost, answers each gap from your code, and puts one real example first.">
+<title>greenhorn: a Claude Code plugin that explains technical text to newcomers</title>
+<meta name="description" content="A Claude Code plugin that rewrites pull request descriptions and technical text for a reader new to your system. Built on papers, with every limit stated.">
 <meta name="theme-color" content="#2E2160">
 <link rel="icon" type="image/svg+xml" href="assets/icon.svg">
 <link rel="canonical" href="https://gagoar.github.io/greenhorn/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="greenhorn">
-<meta property="og:title" content="greenhorn: explain technical text to someone new to your system">
-<meta property="og:description" content="A Claude Code plugin that rewrites technical text for a reader who has never seen your system. It finds where a stranger gets lost, answers each gap from your code, and puts one real example first.">
+<meta property="og:title" content="greenhorn: a Claude Code plugin that explains technical text to newcomers">
+<meta property="og:description" content="A Claude Code plugin that rewrites pull request descriptions and technical text for a reader new to your system. Built on papers, with every limit stated.">
 <meta property="og:url" content="https://gagoar.github.io/greenhorn/">
 <meta property="og:image" content="https://gagoar.github.io/greenhorn/assets/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="greenhorn: a rubber duck on a pier at sunset, next to a suitcase">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="greenhorn: explain technical text to someone new to your system">
-<meta name="twitter:description" content="A Claude Code plugin that rewrites technical text for a reader who has never seen your system. It finds where a stranger gets lost, answers each gap from your code, and puts one real example first.">
+<meta name="twitter:title" content="greenhorn: a Claude Code plugin that explains technical text to newcomers">
+<meta name="twitter:description" content="A Claude Code plugin that rewrites pull request descriptions and technical text for a reader new to your system. Built on papers, with every limit stated.">
 <meta name="twitter:image" content="https://gagoar.github.io/greenhorn/assets/og.png">
 <link rel="stylesheet" href="assets/site.css">
 <script type="application/ld+json">{
@@ -28,9 +28,10 @@
  "name": "greenhorn",
  "applicationCategory": "DeveloperApplication",
  "operatingSystem": "macOS, Linux, Windows (Claude Code with Node 22.18 or later)",
- "description": "A Claude Code plugin that rewrites technical text for a reader who has never seen your system. It finds where a stranger gets lost, answers each gap from your code, and puts one real example first.",
+ "description": "A Claude Code plugin that rewrites pull request descriptions and technical text for a reader new to your system. Built on papers, with every limit stated.",
  "url": "https://gagoar.github.io/greenhorn/",
  "softwareVersion": "0.1.0",
+ "keywords": "Claude Code plugin, pull request description, technical writing, documentation for newcomers, onboarding",
  "license": "https://opensource.org/licenses/MIT",
  "author": {
   "@type": "Person",
@@ -46,50 +47,83 @@
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
-<header class="hero"><div class="wrap"><nav class="nav" aria-label="Main"><a class="brand" href="index.html"><img src="assets/icon.svg" alt="" width="32" height="32">greenhorn</a><a href="index.html" aria-current="page">Home</a><a href="guide.html">Guide</a><a href="evidence.html">How we got here</a><a href="https://github.com/gagoar/greenhorn">GitHub</a></nav><div class="hero-body"><div class="hero-text"><h1>Explain it to someone who has never seen your system.</h1><p class="lead">greenhorn is a Claude Code plugin that rewrites technical text for a reader who is new to your system.</p><pre class="install"><code>/plugin marketplace add gagoar/gago-plugins
+<header class="hero"><div class="wrap"><nav class="nav" aria-label="Main"><a class="brand" href="index.html"><img src="assets/icon.svg" alt="" width="32" height="32">greenhorn</a><a href="index.html" aria-current="page">Home</a><a href="guide.html">Guide</a><a href="evidence.html">How we got here</a><a href="https://github.com/gagoar/greenhorn">GitHub</a></nav><div class="hero-body"><div class="hero-text"><h1>Explain it to someone who has never seen your system.</h1><p class="lead">greenhorn is a Claude Code plugin that rewrites technical text for a reader who is new to your system.</p><p class="angle">Machines write more of the code now. The person who reviews, runs or inherits a change is often new to it, even on their own team. We have no study of this. It is what we see in our own work, and it is why we built greenhorn.</p><pre class="install"><code>/plugin marketplace add gagoar/gago-plugins
 /plugin install greenhorn@gago-plugins</code></pre></div><img class="hero-art" src="assets/icon.svg" alt="greenhorn icon: a rubber duck on a pier at sunset, next to a suitcase" width="210" height="210"></div></div></header>
 <main id="main">
-<section id="a-worked-example">
-<h2>A worked example</h2>
-<p>This Before and After pair is an illustration written for the README. It is not from a real pull request.</p>
-<p class="label">Before</p>
-<blockquote class="before"><p>Fixes the Photon regression by backing out the delta-sync change. The reconciler now short-circuits on a stale ETag and the rehydration path no longer double-fires the capture hook.</p></blockquote>
-<p class="label">After</p>
-<blockquote class="after"><p>Images sometimes showed twice in the viewer. This change stops that.</p><p>For example, a dentist takes one X-ray and sees two copies of it. After this change the viewer shows one copy.</p><p>The cause is the <strong>capture hook</strong>, a function that runs each time a scanner sends an image. A rebuilt viewer list called the hook a second time for the same image. The hook now skips an image that it has already seen.</p></blockquote>
-<p>The checker ran on both files. This is the real output:</p>
-<pre><code>$ node scripts/check-text.ts testdata/readme/before.md
-testdata/readme/before.md:1:1: hard no-example: the text has no example: add a closed code block, a line that starts with "Example" or "For example" and has content, or a Before and After pair of labels
-1 findings (1 hard, 0 warn) for profile adjacent-engineer
-
-$ node scripts/check-text.ts testdata/readme/after.md
-0 findings (0 hard, 0 warn) for profile adjacent-engineer</code></pre>
-<p>The checker is shallow. It saw that the before text has no example. It did not see the jargon (Photon, ETag, rehydration). A different step finds jargon. That step uses a model.</p>
+<section id="the-reader-did-not-write-it">
+<h2>The reader did not write it</h2>
+<p>Reviewing a change was hard before this. Bacchelli and Bird (2013) observed and surveyed developers at Microsoft. They report that understanding the change is the key aspect of code review, and interviewees named it as their main challenge. Their study tests no fix.</p>
+<p>When a tool writes the change, the person who posts the description may know little more than the reviewer. The text must then carry what the code cannot say: what this is, why it exists, and one real case.</p>
 </section>
-<section id="how-it-works">
-<h2>How it works</h2>
-<p>The steps below run in order. They start with a reader that has no access to your repository and no hint of the topic.</p>
-<ol><li>A cold reader reads your text. The cold reader is a read-only agent. It lists each word, step or jump where a stranger gets lost. These places are the stumbles. For each stumble it writes the question it would ask.</li><li>Claude answers each stumble from your code, the linked issue or your docs. If no source backs an answer, the item goes on a list of open questions for you. Claude invents nothing.</li><li>The rewrite opens with the gist. The gist is one sentence that says what the text is about.</li><li>Next comes one example with real values.</li><li>Last comes the mechanism. The mechanism is the part that explains how the thing works. Each term gets a short definition at its first use.</li></ol>
-<p>The cold reader also writes one sentence for what it thinks the text says. If that sentence differs from what you meant, the text fails. You can run only the cold reader with <code>/greenhorn:test</code>. It rewrites nothing.</p>
+<section id="a-real-run">
+<h2>A real run</h2>
+<p>We ran <code>/greenhorn:explain</code> on a pull request description from our own repository, <a href="https://github.com/gagoar/typescript-patterns-enforcer/pull/33">typescript-patterns-enforcer #33</a>. The original is 655 words and has a diagram. This is how it opens.</p>
+<p class="label">Before</p>
+<blockquote class="before"><p>The edit hook misses files that Claude writes through a shell. This change adds a hook that runs when Claude stops. It finds the TypeScript files changed during the session and runs the same checks on them. It shows the findings to the user and never blocks the session. This closes the gap that let a whole module skip every rule in the audit on PR 31.</p></blockquote>
+<p>After (shortened with [...]):</p>
+<blockquote class="before"><p>This PR adds a hook that checks TypeScript files at the end of a Claude Code session, including files that Claude wrote through a shell. The earlier hook does not see those files. The new hook only warns the user. It never blocks anything.</p><p>Claude writes a file with a shell heredoc in the project folder: <code>export const x: any = 1;</code> [...] When the session stops, the new hook prints this on stdout (shortened) and exits with code 0: [...] Each violation line has the line and column, the rule name, the message, and a pointer to the rule text.</p></blockquote>
+<p>The example is real. In the run log, the skill ran the built hook on that file and quoted its output. The rewrite also names what the code could not answer. It says that the text does not explain the audit on PR 31, and it leaves that as an open point.</p>
+<div class="table-scroll"><table><thead><tr><th scope="col"></th><th scope="col">Original</th><th scope="col">After greenhorn</th></tr></thead><tbody><tr><td>Words</td><td>655</td><td>1,010</td></tr><tr><td>Findings of the checker</td><td>0</td><td>0</td></tr><tr><td>Stumbles that a context-free model reader reported</td><td>12</td><td>9</td></tr></tbody></table></div>
+<p>Of the first 12 stumbles, 7 did not come back in the second reading, 5 did, and 4 were new. The text grew by 355 words. The checker passes both versions, because it reads the shape of a text and the original already had a diagram. The reader is a model. These counts show that a fresh reader still stumbles. They do not show that a person finds the text clearer. The run used about $1.43 of model time.</p>
 </section>
 <section id="how-we-got-here">
-<h2>How we got here</h2>
-<p>We started with a terms block at the top of the pull request description. Then we read the papers. In the one paper that tests the order (Rawson et al. 2015, two experiments with about 25 students per group), the two orders did not differ significantly. So we dropped our own claim about order. What is left is a hypothesis that we are testing: a newcomer follows technical text better when a reader with no context marks where they get lost, when every gap is filled from the real source, and when the text opens with one concrete example. No study tests this combination.</p>
-<p><a href="evidence.html">Read the whole account</a>.</p>
+<h2>Why we built it this way</h2>
+<p>We did not start from the papers. We started from a design, attacked it, and then read the papers. Some of what we believed did not survive. This is what did, with what each study did and what it cannot tell us. <a href="evidence.html">The full account</a> lists every source.</p>
+<h3>1. The author cannot find their own gaps</h3>
+<p><strong>The study.</strong> Camerer, Loewenstein and Weber (1989) ran economic experiments. People who knew a company's real earnings guessed what less informed people would estimate. What they knew biased them, and they did not fully ignore it. Markets cut the bias by about half. Feedback alone did not appear to reduce it.</p>
+<p><strong>What we built.</strong> A cold reader that sees only the text and a profile of who the reader is. It never sees your repository. It lists where it stops.</p>
+<p><strong>What we do not know.</strong> The task was forecasting, not writing. It does not show that your text is harder to read.</p>
+<h3>2. Show a worked example</h3>
+<p><strong>The study.</strong> In four experiments, Sweller and Cooper (1985) taught algebra to Year 8 and Year 9 students, 20 to 40 in each experiment. Students who studied worked examples spent less time in practice in three of the four experiments. In the fourth, the researchers matched the time. On later problems with the same structure, they were faster and made fewer errors, with one exception. In one experiment, the groups that did the different-structure problems first showed no difference on either kind. They had no advantage on problems with a different structure.</p>
+<p><strong>What we built.</strong> One concrete example with real values, before the mechanism.</p>
+<p><strong>What we do not know.</strong> The subject was algebra, in small groups, and the test compared examples with solving problems, not with definitions. The benefit may not carry over to new cases, so our eval tests new cases.</p>
+<h3>3. Examples and definitions together</h3>
+<p><strong>The study.</strong> Rawson, Thomas and Jacoby (2015) enrolled 131, 176 and 197 undergraduates in three experiments. In the main analyses, students who studied examples classified examples better than students who only re-studied definitions. The effect sizes in the results run from 0.40 to 1.43. The abstract reports 0.74 to 1.67. The two orders, example first or definition first, did not differ significantly.</p>
+<p><strong>What we built.</strong> Every term gets a definition, and the text carries a real example. The example comes first as a design choice. We claim no benefit from that order. Our default of one example is also a choice, not a finding.</p>
+<p><strong>What we do not know.</strong> The concepts were short and the test came soon after study. The study did not use documents.</p>
+<h3>4. Put the word next to the thing it explains</h3>
+<p><strong>The study.</strong> Chandler and Sweller (1992) ran two experiments. Novices learned from material in which text and diagrams, or parts that refer to each other, sat together. The groups with the integrated material scored higher. In the first experiment, 4 of 10 items differed individually, and the authors call the effects at best moderate. In the second experiment they also spent less time, 190 seconds against 216. The authors call that significant at t(18) = 1.85, which is weaker than the usual two-sided cutoff. One experiment tested 20 apprentices and the other tested 20 university students.</p>
+<p><strong>What we built.</strong> Each term gets its definition at its first use, not in a block at the top.</p>
+<p><strong>What we do not know.</strong> The material was instructions and one report, not jargon. The authors warn that experts, or harder reports, may give different results.</p>
+<h3>5. Jargon changes how reading feels</h3>
+<p><strong>The study.</strong> Bullock and colleagues (2019) recruited 650 online readers, and about 640 were in the analysis. They read short science texts. Jargon lowered how fluent the text felt, 4.57 against 5.27 on a seven-point scale. Hover-over definitions had no significant effect on that feeling.</p>
+<p><strong>What we built.</strong> greenhorn warns when a text defines more than five terms. No study backs that number.</p>
+<p><strong>What we do not know.</strong> The study measured how the text felt, not whether people understood it. The definitions were hover text, not inline text.</p>
+<h3>6. Help for beginners can hurt experts</h3>
+<p><strong>The study.</strong> Kalyuga, Ayres, Chandler and Sweller (2003) reviewed studies of techniques that help beginners. For more experienced learners, those techniques can lose their effect and can even have negative effects.</p>
+<p><strong>What we built.</strong> The output is easy to skip, and you choose a profile that says who the reader is.</p>
+<p><strong>What we do not know.</strong> We know those studies only through the review, and none of them tests a skippable section.</p>
+</section>
+<section id="what-nobody-has-tested">
+<h2>What nobody has tested</h2>
+<p>Our hypothesis: a newcomer follows technical text better when three things hold. A reader with no context marks where they get lost. Claude fills each gap from the real source. The text opens with one concrete example.</p>
+<p>No study tests this combination on technical documents for software newcomers. The method is a hypothesis.</p>
+<p>We wrote the human eval. It has no results yet. <a href="https://github.com/gagoar/greenhorn/blob/main/eval/README.md">Read the protocol</a>. If you run it, send us the result. We publish it even if the result is a tie.</p>
+</section>
+<section id="we-checked-ourselves">
+<h2>We checked ourselves</h2>
+<p>On 2 November 2026 we asked five separate Claude agents to read every claim on our evidence page again, against the text of each paper. They found errors that our first check missed. The Sweller and Cooper first experiment had 62 students, not the 18 we wrote. Chandler and Sweller tested 20 of 26 apprentices, not 26. We wrote that people in the Camerer study could not ignore what they knew. The paper shows a partial bias.</p>
+<p>We fixed all of it in public. The agents are models too. They quoted the paper text, so a person can check each finding. <a href="evidence.html">See the account</a>.</p>
+</section>
+<section id="what-it-touches">
+<h2>What it touches</h2>
+<ul><li>It reads the text that you give it. It reads your repository when it answers a stumble.</li><li>The reader agent has no tools and sees only the text. This relies on Claude Code behavior that the docs do not describe. We tested it in version 2.1.316, and a test keeps the settings.</li><li><code>/greenhorn:explain</code> pre-approves writes only under <code>.greenhorn/</code> in your project, and runs only its own two checker scripts, with any arguments after the <code>.greenhorn/</code> path. <code>/greenhorn:test</code> writes nothing. These settings are a guard, not a sandbox.</li><li>The scripts are TypeScript with no dependency. The two checker scripts import only Node's file module and each other. They make no network call and read no environment variable.</li><li>MIT license. No account, no token and no telemetry in the scripts.</li></ul>
 </section>
 <section id="what-it-cannot-do">
 <h2>What it cannot do</h2>
-<p>The reader is a model. It is not a human newcomer. It finds likely stumbles. It does not prove that a text is clear, and a clean result does not prove it either. The final test is a real person.</p>
-<p>The method is a hypothesis. No study tests this combination, and the human eval has no results yet. The limits, such as 5 terms per text, are untested defaults. No study backs them.</p>
-<p>The checker reads the shape of a text. It cannot tell whether a definition is true.</p>
+<p>The reader is a model. It is not a human newcomer. It finds likely stumbles. A clean result does not prove that a text is clear. The final test is a real person.</p>
+<p>We have not tested the limits, such as 5 terms per text. They are defaults. The checker reads the shape of a text. It cannot tell whether a definition is true.</p>
 </section>
 <section id="install">
 <h2>Install</h2>
-<ol><li><code>/plugin marketplace add gagoar/gago-plugins</code></li><li><code>/plugin install greenhorn@gago-plugins</code></li></ol>
-<p>The two helper plugins, <code>unmistakable</code> and <code>iceberg</code>, install with greenhorn. If one is missing, <code>/greenhorn:explain</code> stops and prints the command to install it. The <a href="guide.html">guide</a> lists every command. The <a href="evidence.html">account of how we got here</a> lists every source and what we could not read.</p>
+<pre><code>/plugin marketplace add gagoar/gago-plugins
+/plugin install greenhorn@gago-plugins</code></pre>
+<p>The install uses two commands. The helper plugins <code>unmistakable</code> and <code>iceberg</code> come with greenhorn. If one is missing, <code>/greenhorn:explain</code> stops and prints the command to install it. The <a href="guide.html">guide</a> lists every command.</p>
+<p>The same author wrote <a href="https://gagoar.github.io/foghorn/">foghorn</a>, which writes technical release notes in the same spirit.</p>
 </section>
 <section id="about-the-name">
 <h2>About the name</h2>
-<p>A greenhorn is a newcomer. The plugin is named for the reader it writes for.</p>
+<p>A greenhorn is a newcomer. We named the plugin for the reader it writes for.</p>
 </section>
 </main>
 <footer class="foot"><div class="wrap"><p>MIT &middot; v0.1.0 &middot; by <a href="https://github.com/gagoar">gagoar</a></p><p>Icon: &ldquo;Bath toy&rdquo; by SUPRIYANTO YANTO (kamalm030391), from <a href="https://thenounproject.com/icon/bath-toy-2990119/">Noun Project</a> (<a href="https://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a>), recolored. <a href="https://github.com/gagoar/greenhorn/blob/main/CREDITS.md">Credits</a></p><p class="links"><a href="https://github.com/gagoar/greenhorn">Source</a><a href="https://github.com/gagoar/greenhorn/issues">Issues</a></p></div></footer>

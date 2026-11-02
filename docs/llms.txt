@@ -11,7 +11,7 @@ greenhorn has two commands: /greenhorn:explain (rewrite) and /greenhorn:test (fi
 
 ## Docs
 
-- [Home](https://gagoar.github.io/greenhorn/): a worked before and after, how it works, limits, install
+- [Home](https://gagoar.github.io/greenhorn/): a real run on a pull request, the papers behind the design and their limits, what the plugin touches, install
 - [Guide](https://gagoar.github.io/greenhorn/guide.html): commands, reader profiles, config, checks, FAQ
 - [How we got here](https://gagoar.github.io/greenhorn/evidence.html): the first design, what we got wrong, the papers we read and could not read, the audit, the hypothesis and the human eval
 

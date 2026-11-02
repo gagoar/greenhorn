@@ -167,3 +167,6 @@ main code { font-size: .85em; }
 /* The install command in the hero must stay readable and copyable on a phone: wrap it instead of clipping it. */
 .hero pre { white-space: pre-wrap; overflow-wrap: anywhere; }
 .hero pre code { overflow-wrap: anywhere; }
+
+/* the one line under the lead that says why the plugin exists */
+.angle { font-size: 17px; max-width: 36em; margin: 0 0 22px; color: #fff; opacity: .92; }
