@@ -32,6 +32,8 @@ A test checks that each regex has a row here. There is no tester link: the direc
 | `scripts/checks.ts` | `NAME_CANDIDATE` | A code-font name or an all-capitals word that is not part of a path or a name |
 | `scripts/checks.ts` | `FILE_EXTENSION` | The end of a file name: "plugin.json" |
 | `scripts/checks.ts` | `BACKTICK` | A backtick |
+| `scripts/verify.ts` | `WHITESPACE` | A run of white space: "a \n b" becomes "a b", so a quote matches across a line break |
+| `scripts/verify.ts` | `WORD` | A word of a quote: `stop_hook_active` stays whole, "edit-hook" gives "edit" and "hook" |
 | `test/repo.test.ts` | `SEMVER` | A version of three whole numbers |
 | `test/repo.test.ts` | `FRONTMATTER` | The frontmatter block at the start of a Markdown file |
 | `test/repo.test.ts` | `NAME_LINE` | The `name:` line of frontmatter |

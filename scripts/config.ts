@@ -16,8 +16,15 @@ export interface Profile {
   readonly limits: Partial<Limits>;
 }
 
+// The verify pass: a second, fresh reader reads the final text. maxRounds is how many fix rounds it may start.
+export interface Verify {
+  readonly enabled: boolean;
+  readonly maxRounds: number;
+}
+
 export interface Config {
   readonly profile: string;
+  readonly verify: Verify;
   readonly limits: Limits;
   readonly profiles: Readonly<Record<string, Profile>>;
 }
@@ -38,7 +45,9 @@ export const DEFAULT_LIMITS: Limits = {
   analogyNeedsLimit: true,
 };
 
-export const DEFAULT_CONFIG: Config = { profile: DEFAULT_PROFILE, limits: DEFAULT_LIMITS, profiles: {} };
+export const DEFAULT_VERIFY: Verify = { enabled: true, maxRounds: 1 };
+
+export const DEFAULT_CONFIG: Config = { profile: DEFAULT_PROFILE, verify: DEFAULT_VERIFY, limits: DEFAULT_LIMITS, profiles: {} };
 
 type Kind = "count" | "flag";
 
@@ -102,7 +111,21 @@ function readProfiles(raw: unknown): Readonly<Record<string, Profile>> {
 }
 
 // The keys that a config file may have. The schema says the same, with additionalProperties false.
-const TOP_LEVEL_KEYS: ReadonlySet<string> = new Set(["$schema", "profile", "limits", "profiles"]);
+const TOP_LEVEL_KEYS: ReadonlySet<string> = new Set(["$schema", "profile", "verify", "limits", "profiles"]);
+
+const VERIFY_KEYS: ReadonlySet<string> = new Set(["enabled", "maxRounds"]);
+
+function readVerify(raw: unknown): Verify {
+  if (raw === undefined) return DEFAULT_VERIFY;
+  if (!isRecord(raw)) throw new ConfigError("verify must be an object");
+  const stray = Object.keys(raw).find((key) => !VERIFY_KEYS.has(key));
+  if (stray !== undefined) throw new ConfigError(`verify.${stray} is not a verify setting (allowed: ${[...VERIFY_KEYS].join(", ")})`);
+  const enabled = raw["enabled"] ?? DEFAULT_VERIFY.enabled;
+  const rounds = raw["maxRounds"] ?? DEFAULT_VERIFY.maxRounds;
+  if (typeof enabled !== "boolean") throw new ConfigError("verify.enabled must be true or false");
+  if (!KIND_TESTS.count(rounds)) throw new ConfigError("verify.maxRounds must be a positive whole number");
+  return { enabled, maxRounds: rounds as number }; // KIND_TESTS.count has just checked the type
+}
 
 // Turns parsed JSON into a config. Limits layer in this order: the built-in defaults, the file's limits, the chosen profile's limits.
 // A profile name from the command line (`chosenName`) wins over the file's own `profile`.
@@ -118,5 +141,5 @@ export function resolveConfig(raw: unknown, chosenName?: string): Config {
   const isKnown = known.length ? known.includes(chosen) : chosen === DEFAULT_PROFILE;
   if (!isKnown) throw new ConfigError(`profile "${chosen}" is not defined: profiles holds ${known.length ? known.join(", ") : "nothing"}`);
   const own = profiles[chosen]?.limits ?? {};
-  return { profile: chosen, profiles, limits: { ...DEFAULT_LIMITS, ...readLimits("limits", raw["limits"]), ...own } };
+  return { profile: chosen, profiles, verify: readVerify(raw["verify"]), limits: { ...DEFAULT_LIMITS, ...readLimits("limits", raw["limits"]), ...own } };
 }

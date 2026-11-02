@@ -11,6 +11,15 @@
       "default": "adjacent-engineer",
       "description": "The profile to use. It must be a key of profiles when profiles is set. Built-in presets in the example file: smart-outsider, adjacent-engineer (default), new-hire."
     },
+    "verify": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "The verify pass of /greenhorn:explain: a second, fresh model reader reads the final text. It counts which stumbles of the first reading come back. It does not measure clarity for a person. Costs one extra reader call per run, and one more when a fix round runs.",
+      "properties": {
+        "enabled": { "type": "boolean", "default": true, "description": "Run the verify pass. Untested default." },
+        "maxRounds": { "type": "integer", "minimum": 1, "default": 1, "description": "Most fix rounds that the verify pass may start. The rounds share the cap of 3 of the lint loop. Untested default." }
+      }
+    },
     "limits": { "$ref": "#/$defs/limits" },
     "profiles": {
       "type": "object",

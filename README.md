@@ -57,6 +57,8 @@ A greenhorn is a newcomer. The plugin is named for the reader it writes for.
 7. **Lint loop.** At most 3 rounds. The text is never weakened to pass.
 8. **Report.** The final text, the stumbles, the `unsure` list, the warnings that remain and the limits.
 
+Between 7 and 8 there is a **verify pass** (step 7a). A second, fresh `greenhorn-reader` reads only the final text. `scripts/verify-reader.ts` checks its JSON (each quote must be in the draft) and counts which stumbles of the first reading come back. If some do, the skill fixes them once more, within the cap of 3 rounds. The report says how many stumbles the second reader found and how many of the first did not recur. A count of zero is not a success. Runs vary, the match is approximate, and this does not measure clarity for people. The pass costs one more reader call per run, and one more when a fix round runs. Turn it off with `verify.enabled: false`.
+
 ## The checker
 
 ```
@@ -100,6 +102,8 @@ Copy `greenhorn.config.example.json` to `greenhorn.config.json`. The schema is `
 | `maxDefinitionWords` | 25 |
 | `requireExample` | true |
 | `analogyNeedsLimit` | true |
+
+`verify` has two settings: `enabled` (default true) and `maxRounds` (default 1, the most verify fix rounds). They are untested defaults too.
 
 These numbers are untested defaults. No study backs them. They are guesses until the eval in `eval/` says otherwise.
 
