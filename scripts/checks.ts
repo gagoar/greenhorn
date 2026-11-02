@@ -66,6 +66,7 @@ const UNIVERSAL_TERMS: ReadonlySet<string> = new Set([
   "pr", "api", "url", "uri", "ci", "cd", "sha", "png", "jpeg", "jpg", "gif", "svg", "html", "css", "json", "yaml", "yml", "xml", "toml", "http", "https",
   "ssh", "sql", "cli", "sdk", "readme", "todo", "id", "os", "ui", "ux", "faq", "csv", "pdf", "md", "ts", "js", "dns", "tcp", "ip", "cpu", "gpu", "ram",
   "ok", "tl", "dr", "fyi", "eta", "wip", "lts", "mit", "oidc", "jwt", "git", "npm", "main", "master", "true", "false", "null", "undefined",
+  "not", "error", "breaking", "note", "warning",
 ]);
 
 // Whether a candidate is a path, a flag, a call or an assignment, not a name. For "docs/a.md", "x()", "a=b" and "--flag" it is true; for "retry_limit" it is false.

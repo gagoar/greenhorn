@@ -108,3 +108,23 @@ test("verify-reader: exit 0 for a valid reading, 1 for an invalid one, 2 for a u
   assert.equal(verify(["--bogus", "x", "--draft", draft]).code, EXIT.usage);
   assert.equal(verify(["--reader", join(dir, "missing.json"), "--draft", draft]).code, EXIT.usage);
 });
+
+test("a quote of only stop words that comes back is counted as recurring", () => {
+  const result = compareReadings(read(reading([stumble("it is")])), read(reading([stumble("it is")])));
+  assert.deepEqual([result.recurred.length, result.didNotRecur.length, result.fresh.length], [1, 0, 0]);
+});
+
+test("a quote with extra spaces is judged by its squashed length, and a long quote with no spaces is refused", () => {
+  assert.ok(parseReading(reading([stumble(" The  Cache")]), "the cache").ok);
+  const long = "x".repeat(201);
+  assert.equal(parseReading(reading([stumble(long)]), long).ok, false);
+});
+
+test("verify-reader: a flag given twice is a usage error", () => {
+  const dir = mkdtempSync(join(tmpdir(), "verify-dup-"));
+  const path = join(dir, "r.json");
+  writeFileSync(path, reading([]));
+  const draft = join(dir, "d.md");
+  writeFileSync(draft, DRAFT);
+  assert.equal(verify(["--reader", path, "--reader", path, "--draft", draft]).code, EXIT.usage);
+});

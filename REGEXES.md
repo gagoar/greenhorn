@@ -13,6 +13,8 @@ A test checks that each regex has a row here. There is no tester link: the direc
 | `scripts/document.ts` | `COPULA_BODY` | The start of a definition body: "is the", "are", "means", "refers to" |
 | `scripts/document.ts` | `DETERMINER_BODY` | A determiner that opens a body: "any string that", accepted only when "that" or "which" follows within 12 words |
 | `scripts/document.ts` | `RELATIVE_WORD` | "that" or "which" |
+| `scripts/document.ts` | `DEFINITE_BODY` | A body that starts with the definite article: "The service retries" matches, "a store" does not |
+| `scripts/document.ts` | `COLON_RELATIVE` | The relative word of a noun phrase in a colon definition: "a spot where a reader stops" matches, "the cache now expires" does not |
 | `scripts/document.ts` | `STATEMENT_WORD` | A verb or negation that makes a body a statement: "the cache was not cleared" |
 | `scripts/document.ts` | `INLINE_DEFINITION` | `A **cache** is a store that keeps copies` gives the term and the body |
 | `scripts/document.ts` | `LOWER_DEFINITION` | `A cache is a store that keeps copies` with a lowercase term, only at the start of a sentence |

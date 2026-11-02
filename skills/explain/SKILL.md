@@ -219,7 +219,7 @@ reader who knows nothing else, and counts which stumbles of step 2 come back. It
 clarity for a person.
 
 Skip step 7a, and say why in the report, when any of these is true: `verify.enabled` is `false` (read it from
-`greenhorn.config.json` in the current directory, else from `${CLAUDE_PLUGIN_ROOT}/greenhorn.config.example.json`);
+the config file that step 1 used);
 step 2 ended early because the text needed no change; step 7 ended with a hard check that still fails.
 
 1. Spawn a NEW `greenhorn:greenhorn-reader`. Never reuse the agent of step 2. Give it the same two blocks as in
@@ -230,12 +230,14 @@ step 2 ended early because the text needed no change; step 7 ended with a hard c
 3. Exit 1 means the JSON is invalid: a wrong shape, a kind that does not exist, a quote of more than 25 words,
    or a quote that is not in the draft. Keep each attempt in its own file (`reader-after.json`, then
    `reader-after-2.json`). Run a NEW reader once more. If it is still invalid, stop the verify pass, say so in the report, and go
-   to step 8. Never use JSON that the script rejected.
+   to step 8. Never use JSON that the script rejected. A retry after invalid JSON is not a fix round.
+   Exit 2 means the script could not read a file, or `reader-before.json` has a wrong shape: stop the
+   verify pass, report the message, and go to step 8.
 4. The script prints `didNotRecur`, `recurred` and `fresh` (quotes) and the new `gist`. The match is
    approximate: wording changes between two runs. Compare the new `gist` with the author's intent from step 1.
 5. If `recurred` or `fresh` has an entry, or the gist does not match the intent, and a fix round remains,
    fix the draft. A fix round remains when fewer than `verify.maxRounds` verify fix rounds have run, and fewer
-   than 3 rounds have run in step 7 and here together, and fewer than 3 reader passes have run in total.
+   than 3 rounds have run in step 7 and here together.
    - Answer each gap from the same sources as step 3. Never invent. A gap with no source goes to `unsure`.
    - Do not delete a sentence only to silence a stumble. Do not copy a reader quote into the text as it is.
    - After the fix, run steps 5, 6 and 7 for the changed lines, then repeat step 7a with a new reader.
@@ -253,7 +255,7 @@ Print, in this order:
 5. The verify pass, in these words with the numbers filled in: "A second model reader, given only the final
    text, reported M possible stumbles. The first reported N on the original. K of those N did not recur. Its
    summary did / did not match the intent." Add the quotes of `recurred` and `fresh`. If M is 0, say "0" and
-   nothing more: a zero is not a success. Add: "Runs vary, and the match is approximate. This does not measure
+   do not call it a success. Add: "Runs vary, and the match is approximate. This does not measure
    clarity for people." If the pass was skipped, say that and why.
 6. One sentence of limits: a model reader is not a human newcomer, and the numbers (5 terms, 3 uses,
    25 words) are untested defaults. Offer `/greenhorn:test` on the new text, and a real newcomer as the

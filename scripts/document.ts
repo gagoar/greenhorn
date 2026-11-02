@@ -80,6 +80,7 @@ const LABELS: readonly string[] = [
   "testing", "test plan", "tests", "review order", "not covered", "screenshots", "context", "background", "motivation", "impact",
   "rollout", "rollback", "result", "results", "status", "scope", "out of scope", "goal", "goals", "problem", "solution", "decision",
   "usage", "output", "input", "limitations", "follow-up", "follow-ups", "related", "see also", "reviewers", "reviewer", "list format",
+  "what changed", "depends on", "open question", "open questions", "breaking change",
 ];
 const LABEL_WORDS: ReadonlySet<string> = new Set(LABELS);
 
@@ -93,6 +94,12 @@ const DETERMINER_BODY = /^(?:any|each|every|one|some|all)\s/i;
 
 // The relative word of a definition. Matches "a string that expires" and "a value which holds"; rejects "a string".
 const RELATIVE_WORD = /\b(?:that|which)\b/i;
+
+// The definite article. Matches "The service retries" and "the store"; rejects "a store". A statement usually starts with it, so a definite body needs a relative word.
+const DEFINITE_BODY = /^the\s/i;
+
+// The relative word of a noun phrase in a colon definition. Matches "a spot where a reader stops", "a store that holds" and "a person who reviews"; rejects "the cache now expires".
+const COLON_RELATIVE = /\b(?:that|which|where|who|whose)\b/i;
 
 // A verb or negation that makes a sentence a statement. Matches "the cache was not cleared" and "the job did run"; rejects "a one-time string".
 const STATEMENT_WORD = /\b(?:was|were|did|does|do|has|have|had|will|would|should|must|cannot|not)\b/i;
@@ -192,13 +199,14 @@ const isLabel = (term: string): boolean => LABEL_WORDS.has(term.toLowerCase());
 
 const firstWords = (text: string, count: number): string => text.split(WHITESPACE).slice(0, count).join(SEPARATOR);
 
-// Whether a bold-colon body reads like a definition. The edge: an article-led body with a "was", "did", "has" or "not" before any "that" or "which" is a statement, as in "the cache was not cleared".
+// Whether a bold-colon body reads like a definition. A body that starts with "the" needs a relative word ("that", "which", "where", "who") within the first words. Any article-led body must have no "was", "did", "has" or "not" before it. "The cache now expires" and "The cache was not cleared" are statements.
 function readsAsDefinition(body: string): boolean {
   const text = body.trim();
   if (COPULA_BODY.test(text)) return true;
   if (DETERMINER_BODY.test(text)) return RELATIVE_WORD.test(firstWords(text, RELATIVE_WINDOW_WORDS));
   if (!ARTICLE_BODY.test(text)) return false;
-  const before = text.split(RELATIVE_WORD)[0] ?? text;
+  if (DEFINITE_BODY.test(text) && !COLON_RELATIVE.test(firstWords(text, RELATIVE_WINDOW_WORDS))) return false;
+  const before = text.split(COLON_RELATIVE)[0] ?? text;
   return !STATEMENT_WORD.test(before);
 }
 

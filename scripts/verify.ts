@@ -31,6 +31,7 @@ export interface Comparison {
 const MAX_QUOTE_WORDS = 25;
 const MAX_STUMBLES = 50;
 const MAX_QUESTION_CHARS = 400;
+const MAX_QUOTE_CHARS = 200; // a quote of text with no spaces (CJK) is one word, so the word cap alone does not bound it
 const MAX_GIST_CHARS = 800;
 const SAME_STUMBLE_JACCARD = 0.5;
 const TERM_KINDS: readonly Kind[] = ["term", "acronym"];
@@ -71,10 +72,10 @@ function stumbleProblems(entry: unknown, index: number, draft: string | undefine
   const at = `stumbles[${index}]`;
   if (!isObject(entry)) return [`${at} must be an object`];
   const quote = entry["quote"];
-  const quoteOk = isText(quote, draft === undefined ? Number.MAX_SAFE_INTEGER : draft.length) && wordCount(quote) <= MAX_QUOTE_WORDS;
+  const quoteOk = typeof quote === "string" && squash(quote) !== "" && squash(quote).length <= MAX_QUOTE_CHARS && wordCount(quote) <= MAX_QUOTE_WORDS;
   const checks: readonly (readonly [boolean, string])[] = [
     [onlyKeys(entry, STUMBLE_KEYS), `${at} allows only ${STUMBLE_KEYS.join(", ")}`],
-    [quoteOk, `${at}.quote must be text of at most ${MAX_QUOTE_WORDS} words`],
+    [quoteOk, `${at}.quote must be text of at most ${MAX_QUOTE_WORDS} words and ${MAX_QUOTE_CHARS} characters`],
     [!quoteOk || draft === undefined || squash(draft).toLowerCase().includes(squash(String(quote)).toLowerCase()), `${at}.quote is not in the draft`],
     [isKind(entry["kind"]), `${at}.kind must be one of ${KINDS.join(", ")}`],
     [isText(entry["question"], MAX_QUESTION_CHARS), `${at}.question must be text of at most ${MAX_QUESTION_CHARS} characters`],
@@ -119,6 +120,8 @@ function jaccard(left: readonly string[], right: readonly string[]): number {
 // A term or acronym stumble matches when its key word shows in the other quote or question. Other kinds match on the
 // same kind and a word overlap of at least 0.5. The test is approximate: wording changes between two runs.
 function sameStumble(old: Stumble, other: Stumble): boolean {
+  const sameQuote = squash(old.quote).toLowerCase() === squash(other.quote).toLowerCase();
+  if (tokens(old.quote).length === 0) return sameQuote; // only stop words or punctuation: no key word, so compare the quote itself
   if (TERM_KINDS.includes(old.kind)) {
     const key = keyToken(old.quote);
     return key !== undefined && tokens(`${other.quote} ${other.question}`).includes(key);

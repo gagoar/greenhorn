@@ -28,6 +28,7 @@ function readFlags(args: readonly string[]): Partial<Record<Flag, string>> {
   const pairs = args.flatMap((arg, index) => (index % 2 === 0 ? [[arg, args[index + 1]] as const] : []));
   const unknown = pairs.find(([name]) => !(FLAGS as readonly string[]).includes(name));
   if (unknown !== undefined || args.length % 2 !== 0) throw new UsageError("unknown or incomplete flag");
+  if (new Set(pairs.map(([name]) => name)).size !== pairs.length) throw new UsageError("a flag was given twice");
   return Object.fromEntries(pairs);
 }
 
