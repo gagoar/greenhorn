@@ -1,0 +1,23 @@
+# Checks that every pull request description follows the pr-brief convention.
+# The checkout is the BASE commit, not the PR's merge commit. The gate reads
+# .pr-brief.json from the checkout, and a PR must not be able to edit its own rules.
+# The gate only reads that file and the event payload, and never runs code from the PR.
+name: pr-brief
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened, ready_for_review]
+
+permissions:
+  contents: read
+
+jobs:
+  description:
+    # Draft PRs may still be a work in progress.
+    if: github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          persist-credentials: false
+      - uses: gagoar/pr-brief@ddbb5660facd5418c27e89fd1b1b1fd37a50f970 # v0

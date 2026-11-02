@@ -1,0 +1,56 @@
+# Publishes a GitHub release when the plugin version changes on main.
+# The version in .claude-plugin/plugin.json is the release: bump it in a pull request, merge, and
+# this job tags the merge commit v<version> and writes the release. It uses only the job's own
+# token. Run it by hand (workflow_dispatch) to publish the version that main already has.
+name: release
+on:
+  push:
+    branches: [main]
+    paths: [".claude-plugin/plugin.json"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+      - name: Read the version
+        id: version
+        run: |
+          set -euo pipefail
+          version="$(node -p "JSON.parse(require('node:fs').readFileSync('.claude-plugin/plugin.json', 'utf8')).version")"
+          echo "tag=v${version}" >> "$GITHUB_OUTPUT"
+      - name: Skip when the release already exists
+        id: exists
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.version.outputs.tag }}
+        run: |
+          if gh release view "$TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            echo "found=true" >> "$GITHUB_OUTPUT"
+            echo "Release $TAG exists. Nothing to do."
+          fi
+      - name: Gate and tests
+        if: steps.exists.outputs.found != 'true'
+        run: |
+          node scripts/check-plugin-safety.ts .
+          npm test
+      - name: Create the release
+        if: steps.exists.outputs.found != 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.version.outputs.tag }}
+        run: |
+          gh release create "$TAG" --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --title "$TAG" --generate-notes
