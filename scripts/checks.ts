@@ -55,8 +55,24 @@ const ANALOGY_LIMIT = /\b(?:unlike|differs? from|breaks? down|the difference is)
 // A "but ... not" clause that says where an analogy stops. Matches "like a line, but it is not first come first served"; rejects "like a line, but this is not like a bus".
 const ANALOGY_BUT_NOT = /\bbut\b[^.!?]*\bnot\b(?!\s+like\b)/i;
 
-// A name worth defining: code font with no space, a CamelCase name, or an all-capitals word. Matches "`retry_limit`", "StumbleReader" and "STE"; rejects "`a b`", "Stumble" and "The".
-const NAME_CANDIDATE = /`([^`\s]+)`|\b([A-Z][a-z0-9]+(?:[A-Z][a-z0-9]+)+)\b|\b([A-Z]{2,})\b/g;
+// A name worth defining: code font with no space, or an all-capitals word that is not part of a path or a name. Matches "`retry_limit`" and "STE"; rejects "`a b`", "Stumble", "SKILL.md" and "A_B".
+const NAME_CANDIDATE = /`([^`\s]+)`|(?<![\w./-])([A-Z]{2,})(?![\w-]|[./]\w)/g;
+
+// The end of a file name. Matches "plugin.json" and "icon.svg"; rejects "retry_limit" and "bindScripts".
+const FILE_EXTENSION = /\.[A-Za-z0-9]{1,5}$/;
+
+// Words and acronyms that every developer knows: no text needs to define them.
+const UNIVERSAL_TERMS: ReadonlySet<string> = new Set([
+  "pr", "api", "url", "uri", "ci", "cd", "sha", "png", "jpeg", "jpg", "gif", "svg", "html", "css", "json", "yaml", "yml", "xml", "toml", "http", "https",
+  "ssh", "sql", "cli", "sdk", "readme", "todo", "id", "os", "ui", "ux", "faq", "csv", "pdf", "md", "ts", "js", "dns", "tcp", "ip", "cpu", "gpu", "ram",
+  "ok", "tl", "dr", "fyi", "eta", "wip", "lts", "mit", "oidc", "jwt", "git", "npm", "main", "master", "true", "false", "null", "undefined",
+  "not", "error", "breaking", "note", "warning",
+]);
+
+// Whether a candidate is a path, a flag, a call or an assignment, not a name. For "docs/a.md", "x()", "a=b" and "--flag" it is true; for "retry_limit" it is false.
+const isSnippet = (name: string): boolean => name.includes("/") || FILE_EXTENSION.test(name) || name.endsWith("()") || name.includes("=") || name.startsWith("-");
+
+const worthDefining = (name: string): boolean => !isSnippet(name) && !UNIVERSAL_TERMS.has(name.toLowerCase());
 
 // A backtick. Removed from "`x`": it becomes "x".
 const BACKTICK = /`/g;
@@ -122,7 +138,9 @@ const undefinedRepeatedTerm: Check = {
   id: "undefined-repeated-term",
   level: Level.Warn,
   run: ({ doc, defs, limits }) => {
-    const found = doc.prose.flatMap((line, index) => [...line.matchAll(NAME_CANDIDATE)].map((match) => ({ name: match[0].replace(BACKTICK, ""), line: index + FIRST, col: (match.index ?? 0) + FIRST })));
+    const found = doc.prose
+      .flatMap((line, index) => [...line.matchAll(NAME_CANDIDATE)].map((match) => ({ name: match[0].replace(BACKTICK, ""), line: index + FIRST, col: (match.index ?? 0) + FIRST })))
+      .filter((item) => worthDefining(item.name));
     const names = [...new Set(found.map((item) => item.name))];
     return names
       .filter((name) => !defs.some((definition) => definition.term.toLowerCase() === name.toLowerCase()))

@@ -2,7 +2,7 @@
 
 The stumble reader is a model. A model is not a human newcomer. This eval is the human step. It has not been run. This folder holds no results.
 
-The method is a hypothesis: a text that follows "stumble, ground, example first" is easier for a stranger to understand than the original. We know of no study that compares definition-first with example-first text. The eval decides whether the hypothesis holds. It also tunes the limits in `greenhorn.config.json`, which are untested defaults today.
+The method is a hypothesis: a text that follows "stumble, ground, example first" is easier for a stranger to understand than the original. In the one paper we found that tests the order (Rawson et al. 2015), the order of example and definition made no significant difference. We know of no study that tests this whole method on technical documents. The eval decides whether the hypothesis holds. It also tunes the limits in `greenhorn.config.json`, which are untested defaults today.
 
 ## Documents
 

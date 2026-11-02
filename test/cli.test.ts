@@ -64,6 +64,10 @@ const BAD_CONFIGS: readonly (readonly [unknown, string])[] = [
   [{ limits: { surprise: 1 } }, "limits.surprise is not a limit"],
   [{ profile: "missing", profiles: { a: { description: "x" } } }, "is not defined"],
   [{ profiles: { a: {} } }, "profiles.a.description must be a string"],
+  [{ verify: [] }, "verify must be an object"],
+  [{ verify: { enabled: "yes" } }, "verify.enabled must be true or false"],
+  [{ verify: { maxRounds: 0 } }, "verify.maxRounds must be a positive whole number"],
+  [{ verify: { rounds: 1 } }, "verify.rounds is not a verify setting"],
 ];
 
 test("a bad config exits 2 and says which field is wrong", () => {
@@ -155,4 +159,8 @@ test("a config with an unknown profile and no profiles table, or an unknown top-
   assert.equal(unknownKey.code, EXIT.usage);
   assert.ok(unknownKey.err.includes("limitz is not a config key"), unknownKey.err);
   assert.equal(cli([CONFIG, configFile({ $schema: "./schema/greenhorn.schema.json" })], GOOD).code, EXIT.ok);
+});
+
+test("a valid verify block is accepted", () => {
+  assert.equal(cli([CONFIG, configFile({ verify: { enabled: false, maxRounds: 2 } })], GOOD).code, EXIT.ok);
 });

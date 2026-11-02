@@ -9,6 +9,13 @@ A test checks that each regex has a row here. There is no tester link: the direc
 | `scripts/document.ts` | `FENCE_LINE` | A fence line: "```ts" and "~~~~" match with their mark and info text, "``x``" does not |
 | `scripts/document.ts` | `BLOCK_START` | A line that starts a block (list item, heading, quote, table row), so it does not join the line before |
 | `scripts/document.ts` | `BOLD_COLON` | `- **Stumble**: a spot where a reader stops` gives the term and the body |
+| `scripts/document.ts` | `ARTICLE_BODY` | The start of a definition body: "a one-time string", "an agent", "the store" |
+| `scripts/document.ts` | `COPULA_BODY` | The start of a definition body: "is the", "are", "means", "refers to" |
+| `scripts/document.ts` | `DETERMINER_BODY` | A determiner that opens a body: "any string that", accepted only when "that" or "which" follows within 12 words |
+| `scripts/document.ts` | `RELATIVE_WORD` | "that" or "which" |
+| `scripts/document.ts` | `DEFINITE_BODY` | A body that starts with the definite article: "The service retries" matches, "a store" does not |
+| `scripts/document.ts` | `COLON_RELATIVE` | The relative word of a noun phrase in a colon definition: "a spot where a reader stops" matches, "the cache now expires" does not |
+| `scripts/document.ts` | `STATEMENT_WORD` | A verb or negation that makes a body a statement: "the cache was not cleared" |
 | `scripts/document.ts` | `INLINE_DEFINITION` | `A **cache** is a store that keeps copies` gives the term and the body |
 | `scripts/document.ts` | `LOWER_DEFINITION` | `A cache is a store that keeps copies` with a lowercase term, only at the start of a sentence |
 | `scripts/document.ts` | `TERM_MARKS` | The bold and code marks around a term |
@@ -24,8 +31,11 @@ A test checks that each regex has a row here. There is no tester link: the direc
 | `scripts/checks.ts` | `ANALOGY` | "like a", "is like", "think of ... as" |
 | `scripts/checks.ts` | `ANALOGY_LIMIT` | "unlike", "differs from", "breaks down", "the difference is" |
 | `scripts/checks.ts` | `ANALOGY_BUT_NOT` | "but ... not" in the analogy sentence or the next one, unless "not" is followed by "like" |
-| `scripts/checks.ts` | `NAME_CANDIDATE` | A code-font name, a CamelCase name or an all-capitals word |
+| `scripts/checks.ts` | `NAME_CANDIDATE` | A code-font name or an all-capitals word that is not part of a path or a name |
+| `scripts/checks.ts` | `FILE_EXTENSION` | The end of a file name: "plugin.json" |
 | `scripts/checks.ts` | `BACKTICK` | A backtick |
+| `scripts/verify.ts` | `WHITESPACE` | A run of white space: "a \n b" becomes "a b", so a quote matches across a line break |
+| `scripts/verify.ts` | `WORD` | A word of a quote: `stop_hook_active` stays whole, "edit-hook" gives "edit" and "hook" |
 | `test/repo.test.ts` | `SEMVER` | A version of three whole numbers |
 | `test/repo.test.ts` | `FRONTMATTER` | The frontmatter block at the start of a Markdown file |
 | `test/repo.test.ts` | `NAME_LINE` | The `name:` line of frontmatter |

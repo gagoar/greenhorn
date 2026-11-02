@@ -1,6 +1,10 @@
 {
   "$schema": "./schema/greenhorn.schema.json",
   "profile": "adjacent-engineer",
+  "verify": {
+    "enabled": true,
+    "maxRounds": 1
+  },
   "limits": {
     "maxTerms": 5,
     "glossaryThreshold": 3,

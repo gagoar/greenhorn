@@ -4,12 +4,22 @@
 
 **Explain it to someone who has never seen your system.**
 
+We know AI writes most of the code today. The experts are machines now. Some of us still need to understand what ships. We plan our work, and our Skills are curated and battle tested. [pr-brief](https://github.com/gagoar/pr-brief) writes the description, on the premise that a well-written description should suffice. When the PRs landed, we were out of context anyway. greenhorn is a way in.
+
 greenhorn is a Claude Code plugin. It has two commands:
 
 - `/greenhorn:explain` rewrites a text for a reader who is new to the system.
 - `/greenhorn:test` only finds the places where such a reader would stop. It rewrites nothing.
 
 Docs: [gagoar.github.io/greenhorn](https://gagoar.github.io/greenhorn/)
+
+## A real run
+
+PR #33 of [typescript-patterns-enforcer](https://github.com/gagoar/typescript-patterns-enforcer/pull/33) already had a pr-brief description. It has 655 words. A cold reader stopped 12 times on it. The rewrite has 1,010 words, and a second reader stopped 9 times. Of the first 12 stumbles, 7 did not come back, 5 did, and 4 were new. Both readers are models. These counts do not show that a person finds the text clearer. The rewrite opens like this:
+
+> This PR adds a hook that checks TypeScript files at the end of a Claude Code session, including files that Claude wrote through a shell. The earlier hook does not see those files. The new hook only warns the user. It never blocks anything.
+
+The [home page](https://gagoar.github.io/greenhorn/) shows the full before and after. The [account of how we got here](https://gagoar.github.io/greenhorn/evidence.html) links every paper, with its limits.
 
 ## Before and after
 
@@ -47,7 +57,7 @@ A greenhorn is a newcomer. The plugin is named for the reader it writes for.
 
 `/greenhorn:explain` runs nine steps. They match sections 0 to 8 of `skills/explain/SKILL.md`.
 
-0. **Dependency check.** It stops when `asd-ste100` or `iceberg:edit` is missing.
+0. **Dependency check.** The manifest lists both helpers as dependencies. The skill also stops when `asd-ste100` or `iceberg:edit` is missing, at step 0 or at the polish step. A model makes this check, so treat it as a fallback, not a gate.
 1. **Input and profile.** Get the text and pick who the reader is. There are three presets: `smart-outsider`, `adjacent-engineer` (the default) and `new-hire`. They live in `greenhorn.config.example.json`. The skill passes the chosen name to the checker with `--profile`.
 2. **Stumble pass.** A read-only agent, `greenhorn-reader`, gets the text and the profile. It has no tools and no repository access (see Limits for how that is enforced). It lists each word, step or jump that it cannot follow, with the question it would ask. It also writes one sentence for what it thinks the text says. If that sentence differs from what you meant, the text fails.
 3. **Ground pass.** Claude answers each stumble from the code, the linked issue or the docs. An answer with no source goes to an `unsure` list and becomes a question for you. Nothing is invented.
@@ -56,6 +66,8 @@ A greenhorn is a newcomer. The plugin is named for the reader it writes for.
 6. **Polish.** The `asd-ste100` skill in STE-flavored mode, then `iceberg:edit --no-em-dash`. The edit always deletes single hedge words. The skill compares with the draft and restores a hedge that carries real uncertainty.
 7. **Lint loop.** At most 3 rounds. The text is never weakened to pass.
 8. **Report.** The final text, the stumbles, the `unsure` list, the warnings that remain and the limits.
+
+Between 7 and 8 there is a **verify pass** (step 7a). A second, fresh `greenhorn-reader` reads only the final text. `scripts/verify-reader.ts` checks its JSON (each quote must be in the draft) and counts which stumbles of the first reading come back. If some do, the skill fixes them once more, within the cap of 3 rounds. The report says how many stumbles the second reader found and how many of the first did not recur. A count of zero is not a success. Runs vary, the match is approximate, and this does not measure clarity for people. The pass costs one more reader call per run, and one more when a fix round runs. Turn it off with `verify.enabled: false`.
 
 ## The checker
 
@@ -76,14 +88,14 @@ It reads stdin when you give no file. Exit 0 means no hard failure. Exit 1 means
 | `no-example` | hard | None of these: a closed code block with text in it, a line that starts with "Example:", "For example" or "e.g." and has content on that line or the next, or a Before and After pair where both are labels (`Before:`, `**Before**`, `## Before`) and not prose |
 | `unclosed-fence` | warn | A code fence that never closes. The text after it is still checked, and the fence is not an example |
 | `term-before-definition` | warn | A term used before the line that defines it |
-| `undefined-repeated-term` | warn | A code-font or CamelCase or all-capitals name used 3 or more times and never defined. It will give false alarms |
+| `undefined-repeated-term` | warn | A code-font name or an all-capitals acronym used 3 or more times and never defined. It skips paths, file names, flags, calls, assignments and a list of universal terms (PR, API, README, SHA, main and the like). It will give false alarms |
 | `too-many-terms` | warn | More defined terms than the limit |
 | `long-definition` | warn | A definition longer than the limit |
 | `analogy-without-limit` | warn | "like a" or "think of ... as" with none of "unlike", "differs from", "breaks down" or "the difference is" in the next two sentences, and no "but ... not" clause (where "not" is not followed by "like") in the analogy sentence or the one after it |
 
 What counts as a definition. The checker joins the lines of a paragraph or list item (at most 12 lines) before it looks. It reads three forms:
 
-- Colon form: `**Term**: body`, with an optional list bullet. The bold labels Note, Warning, Tip, Example, Before, After, Caution and Important are not terms.
+- Colon form: `**Term**: body`, with an optional list bullet. The body must read like a definition: it starts with "a", "an" or "the", or with "is", "are", "means" or "refers to", or it starts with "any", "each", "every", "one", "some" or "all" and has "that" or "which" within 12 words. A body that starts with a digit, a list marker, a link, a code span, a path or a verb in the imperative is not a definition. A body that starts with an article but says "was", "did", "has", "will" or "not" before any "that" or "which" is a statement, not a definition: "**Reason**: the cache was not cleared". The bold labels in a fixed list (Note, Warning, Summary, Risk, Size, Legend, Review order, Cause, Fix and others; see `LABELS` in `scripts/document.ts`) are never terms.
 - Sentence form: "X is a/an Y that ..." or "X are a/an Y that ...", where X is in bold, in code font or a capitalized name. The word `that` is required: "A **cache** is a store" is not a definition.
 - Lowercase form: the same pattern with a plain lowercase X of one or two words, only at the start of a sentence, with an optional "A", "An" or "The" before it. "We think a cache is a store that ..." is not a definition.
 
@@ -101,6 +113,8 @@ Copy `greenhorn.config.example.json` to `greenhorn.config.json`. The schema is `
 | `requireExample` | true |
 | `analogyNeedsLimit` | true |
 
+`verify` has two settings: `enabled` (default true) and `maxRounds` (default 1, the most verify fix rounds). They are untested defaults too.
+
 These numbers are untested defaults. No study backs them. They are guesses until the eval in `eval/` says otherwise.
 
 ## Limits
@@ -111,17 +125,15 @@ These numbers are untested defaults. No study backs them. They are guesses until
 - The numbers above are untested defaults.
 - The checker reads text shape. It cannot tell whether a definition is true or whether an example is a good one.
 - Each of the warn checks can be wrong. `undefined-repeated-term` will flag a name that needs no definition.
-- The method is a hypothesis. We know of no study that compares definition-first with example-first text. The human eval in `eval/README.md` is how the method gets tested. It has no results yet.
+- The method is a hypothesis. No study tests this combination. The human eval in `eval/README.md` is how the method gets tested. It has no results yet.
 
-## Prior art and reading
+## Prior art and research
 
 [coldread](https://github.com/patrykwiener/coldread) by patrykwiener solves a related problem: it makes session context readable to a reader who was outside the session. greenhorn targets a different gap, the domain concepts that a newcomer lacks.
 
-The design leans on these sources. They are supporting reading, not verified against the primary paper, and not proof for this tool:
+We started with a terms block at the top of the pull request description. Then we read the papers. In the one paper that tests the order (Rawson et al. 2015, two experiments with about 25 students per group), the two orders did not differ significantly, so we dropped our own claim about order. What is left is a hypothesis that we are testing: a newcomer follows technical text better when a reader with no context marks where they get lost, when every gap is filled from the real source, and when the text opens with one concrete example. No study tests this combination, and the defaults above are untested.
 
-- Concreteness fading: Fyfe et al. (2014).
-- Mismatch risk of analogies: Gray and Holyoak (2021).
-- The worked-example effect and the expertise reversal effect: the Sweller line of work.
+[How we got here](https://gagoar.github.io/greenhorn/evidence.html) tells the whole account and lists every source with its read status.
 
 ## Privacy
 
