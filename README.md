@@ -143,4 +143,4 @@ MIT. See `LICENSE`.
 
 ## Credits
 
-The icon is a modified work from the Noun Project. See [CREDITS.md](CREDITS.md) for the artist.
+Icon: ["Bath toy"](https://thenounproject.com/icon/bath-toy-2990119/) by SUPRIYANTO YANTO, from Noun Project, used under [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/). Recolored and placed in a new composition. See [CREDITS.md](CREDITS.md).
