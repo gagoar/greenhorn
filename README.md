@@ -4,12 +4,22 @@
 
 **Explain it to someone who has never seen your system.**
 
+We know AI writes most of the code today. The experts are machines now. Some of us still need to understand what ships. We plan our work, and our Skills are curated and battle tested. [pr-brief](https://github.com/gagoar/pr-brief) writes the description, on the premise that a well-written description should suffice. When the PRs landed, we were out of context anyway. greenhorn is a way in.
+
 greenhorn is a Claude Code plugin. It has two commands:
 
 - `/greenhorn:explain` rewrites a text for a reader who is new to the system.
 - `/greenhorn:test` only finds the places where such a reader would stop. It rewrites nothing.
 
 Docs: [gagoar.github.io/greenhorn](https://gagoar.github.io/greenhorn/)
+
+## A real run
+
+PR #33 of [typescript-patterns-enforcer](https://github.com/gagoar/typescript-patterns-enforcer/pull/33) already had a pr-brief description. It has 655 words. A cold reader stopped 12 times on it. The rewrite has 1,010 words, and a second reader stopped 9 times. Of the first 12 stumbles, 7 did not come back, 5 did, and 4 were new. Both readers are models. These counts do not show that a person finds the text clearer. The rewrite opens like this:
+
+> This PR adds a hook that checks TypeScript files at the end of a Claude Code session, including files that Claude wrote through a shell. The earlier hook does not see those files. The new hook only warns the user. It never blocks anything.
+
+The [home page](https://gagoar.github.io/greenhorn/) shows the full before and after. The [account of how we got here](https://gagoar.github.io/greenhorn/evidence.html) links every paper, with its limits.
 
 ## Before and after
 
