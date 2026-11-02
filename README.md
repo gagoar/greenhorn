@@ -47,7 +47,7 @@ A greenhorn is a newcomer. The plugin is named for the reader it writes for.
 
 `/greenhorn:explain` runs nine steps. They match sections 0 to 8 of `skills/explain/SKILL.md`.
 
-0. **Dependency check.** It stops when `asd-ste100` or `iceberg:edit` is missing.
+0. **Dependency check.** The manifest lists both helpers as dependencies. The skill also stops when `asd-ste100` or `iceberg:edit` is missing, at step 0 or at the polish step. A model makes this check, so treat it as a fallback, not a gate.
 1. **Input and profile.** Get the text and pick who the reader is. There are three presets: `smart-outsider`, `adjacent-engineer` (the default) and `new-hire`. They live in `greenhorn.config.example.json`. The skill passes the chosen name to the checker with `--profile`.
 2. **Stumble pass.** A read-only agent, `greenhorn-reader`, gets the text and the profile. It has no tools and no repository access (see Limits for how that is enforced). It lists each word, step or jump that it cannot follow, with the question it would ask. It also writes one sentence for what it thinks the text says. If that sentence differs from what you meant, the text fails.
 3. **Ground pass.** Claude answers each stumble from the code, the linked issue or the docs. An answer with no source goes to an `unsure` list and becomes a question for you. Nothing is invented.

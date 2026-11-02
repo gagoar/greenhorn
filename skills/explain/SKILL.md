@@ -47,6 +47,14 @@ This plugin needs two other skills. Look at the list of available skills before 
 
 If both are missing, print both. Do not run a part of the pipeline without them. Do not use another style.
 
+The manifest lists both plugins under `dependencies`, so Claude Code should install them with greenhorn. This
+step is the fallback for a case where that did not happen. A model makes this check, so it can miss. Step 6
+checks again at the point of use.
+
+If a helper is missing at the time you reach it (the Skill call fails, or the skill is not found), stop at
+that point. Print the install lines above for that helper. Do not skip the pass, do not write the polish by
+hand and do not use another skill in its place. Say which step stopped and which files exist in `.greenhorn/`.
+
 ## 1. Input and profile
 
 1. Get the text. The argument is a file path or pasted text. With no argument, ask the user for one.
@@ -160,6 +168,7 @@ Fix the text and run the checker again until no hard check fails.
 ## 6. Prose polish
 
 Run the two passes below, on `.greenhorn/draft.md`, in this order.
+A failed call to either skill is the dependency failure of step 0: stop there and report it.
 
 1. Skill `asd-ste100` in the STE-flavored mode. This is explanatory prose, not a procedure. Keep the
    sentence-shape rules (active voice, short sentences, no phrasal verbs, no semicolons). Keep the term,
