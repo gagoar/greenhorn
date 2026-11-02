@@ -146,3 +146,15 @@ function listFiles(dir: string): readonly string[] {
 test("no file in docs is over 256 KiB", () => {
   listFiles(DOCS).forEach((path) => assert.ok(statSync(path).size <= MAX_TEXT_BYTES, `${path} is over 256 KiB`));
 });
+
+test("every page has the floating GitHub link with an inline SVG", () => {
+  pages().forEach((name) => {
+    const link = tags(page(name), "a").find((tag) => attr(tag, "class") === "gh-fab");
+    assert.ok(link !== undefined, `${name} has no floating GitHub link`);
+    assert.equal(attr(link, "href"), `${SCHEME}github.com/gagoar/greenhorn`);
+    assert.equal(attr(link, "aria-label"), "View greenhorn on GitHub");
+    const html = page(name);
+    const inner = html.slice(html.indexOf('class="gh-fab"'), html.indexOf("</a>", html.indexOf('class="gh-fab"')));
+    assert.ok(inner.includes("<svg") && inner.includes("<path") && !inner.includes("<img"), `${name}: the GitHub mark is not an inline SVG`);
+  });
+});

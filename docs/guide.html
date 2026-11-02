@@ -3,30 +3,30 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>greenhorn guide: write for readers who do not know your system</title>
-<meta name="description" content="How to use /greenhorn:explain and /greenhorn:test in Claude Code. Reader profiles, the config file, the checks that fail and the checks that warn, local use with no CI, and answers to common questions. Plain language for PR description clarity.">
+<title>greenhorn guide: commands, profiles, config and checks</title>
+<meta name="description" content="How to use /greenhorn:explain and /greenhorn:test in Claude Code. Reader profiles, the config file, the checks, local use and a short FAQ.">
 <meta name="theme-color" content="#2E2160">
 <link rel="icon" type="image/svg+xml" href="assets/icon.svg">
 <link rel="canonical" href="https://gagoar.github.io/greenhorn/guide.html">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="greenhorn">
-<meta property="og:title" content="greenhorn guide: write for readers who do not know your system">
-<meta property="og:description" content="How to use /greenhorn:explain and /greenhorn:test in Claude Code. Reader profiles, the config file, the checks that fail and the checks that warn, local use with no CI, and answers to common questions. Plain language for PR description clarity.">
+<meta property="og:title" content="greenhorn guide: commands, profiles, config and checks">
+<meta property="og:description" content="How to use /greenhorn:explain and /greenhorn:test in Claude Code. Reader profiles, the config file, the checks, local use and a short FAQ.">
 <meta property="og:url" content="https://gagoar.github.io/greenhorn/guide.html">
 <meta property="og:image" content="https://gagoar.github.io/greenhorn/assets/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="greenhorn: a rubber duck on a pier at sunset, next to a suitcase">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="greenhorn guide: write for readers who do not know your system">
-<meta name="twitter:description" content="How to use /greenhorn:explain and /greenhorn:test in Claude Code. Reader profiles, the config file, the checks that fail and the checks that warn, local use with no CI, and answers to common questions. Plain language for PR description clarity.">
+<meta name="twitter:title" content="greenhorn guide: commands, profiles, config and checks">
+<meta name="twitter:description" content="How to use /greenhorn:explain and /greenhorn:test in Claude Code. Reader profiles, the config file, the checks, local use and a short FAQ.">
 <meta name="twitter:image" content="https://gagoar.github.io/greenhorn/assets/og.png">
 <link rel="stylesheet" href="assets/site.css">
 <script type="application/ld+json">{
  "@context": "https://schema.org",
  "@type": "HowTo",
  "name": "Install and run greenhorn in Claude Code",
- "description": "How to use /greenhorn:explain and /greenhorn:test in Claude Code. Reader profiles, the config file, the checks that fail and the checks that warn, local use with no CI, and answers to common questions. Plain language for PR description clarity.",
+ "description": "How to use /greenhorn:explain and /greenhorn:test in Claude Code. Reader profiles, the config file, the checks, local use and a short FAQ.",
  "step": [
   {
    "@type": "HowToStep",
@@ -94,7 +94,7 @@
 <p>Both take <code>--profile smart-outsider</code>, <code>--profile adjacent-engineer</code> or <code>--profile new-hire</code>.</p>
 <h3>What explain does, in order</h3>
 <ol start="0"><li><strong>Dependency check.</strong> Stop when <code>asd-ste100</code> or <code>iceberg:edit</code> is missing.</li><li><strong>Input and profile.</strong> Get the text and pick who the reader is.</li><li><strong>Stumble pass.</strong> The <code>greenhorn-reader</code> agent gets the text and the profile. It has no tools and no repository access. It lists each stumble with a question. It writes one sentence for what it thinks the text says.</li><li><strong>Ground pass.</strong> Claude answers each stumble from the code, the linked issue or the docs. An answer with no source goes to an <code>unsure</code> list and becomes a question for you.</li><li><strong>Rewrite.</strong> One-sentence gist, one concrete example with real values, then the mechanism. The rewrite defines each term at first use as "X is a Y that does Z". An analogy appears only with a stated limit.</li><li><strong>Check.</strong> <code>scripts/check-text.ts</code> runs.</li><li><strong>Polish.</strong> The <code>asd-ste100</code> skill, then <code>iceberg:edit --no-em-dash</code>.</li><li><strong>Lint loop.</strong> At most 3 rounds. Explain never weakens the text to pass.</li><li><strong>Report.</strong> The final text, the stumbles, the <code>unsure</code> list and the warnings that remain.</li></ol>
-<p>If the stumble pass finds nothing and the gist matches your intent, explain prints the text as it is. A text that already reads well gets worse when you add scaffolding.</p>
+<p>If the stumble pass finds nothing and the gist matches your intent, explain prints the text unchanged. A text that already reads well gets worse when you add scaffolding.</p>
 </section>
 <section id="reader-profiles">
 <h2>Reader profiles</h2>
@@ -117,7 +117,7 @@
 </section>
 <section id="local-use-no-ci">
 <h2>Local use, no CI</h2>
-<p>greenhorn runs on your machine, inside your Claude Code session. The scripts use only Node built-in modules. Node 22.18 or later runs them as they are. There is no build step and no network call. The plugin collects no data.</p>
+<p>greenhorn runs on your machine, inside your Claude Code session. The scripts use only Node built-in modules. Node 22.18 or later runs them unchanged. There is no build step and no network call. The plugin collects no data.</p>
 <p>You can run the checker alone, by hand, on any Markdown file. It needs no CI.</p>
 </section>
 <section id="faq">
@@ -139,5 +139,6 @@ Open an issue on <a href="https://github.com/gagoar/greenhorn/issues">GitHub</a>
 </section>
 </main>
 <footer class="foot"><div class="wrap"><p>MIT &middot; v0.1.0 &middot; by <a href="https://github.com/gagoar">gagoar</a></p><p>Icon: &ldquo;Bath toy&rdquo; by SUPRIYANTO YANTO (kamalm030391), from <a href="https://thenounproject.com/icon/bath-toy-2990119/">Noun Project</a> (<a href="https://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a>), recolored. <a href="https://github.com/gagoar/greenhorn/blob/main/CREDITS.md">Credits</a></p><p class="links"><a href="https://github.com/gagoar/greenhorn">Source</a><a href="https://github.com/gagoar/greenhorn/issues">Issues</a></p></div></footer>
+<a class="gh-fab" href="https://github.com/gagoar/greenhorn" aria-label="View greenhorn on GitHub"><svg viewBox="0 0 16 16" width="26" height="26" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg></a>
 </body>
 </html>

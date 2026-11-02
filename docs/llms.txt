@@ -6,7 +6,7 @@ greenhorn has two commands: /greenhorn:explain (rewrite) and /greenhorn:test (fi
 
 ## Docs
 
-- [Home](https://gagoar.github.io/greenhorn/): what it does, a real before and after, install
+- [Home](https://gagoar.github.io/greenhorn/): a worked before and after, how it works, limits, install
 - [Guide](https://gagoar.github.io/greenhorn/guide.html): commands, reader profiles, config, checks, FAQ
 - [Evidence](https://gagoar.github.io/greenhorn/evidence.html): what we verified and did not, prior art, the human eval
 
