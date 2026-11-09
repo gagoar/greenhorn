@@ -20,4 +20,4 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.base.sha }}
           persist-credentials: false
-      - uses: gagoar/pr-brief@ddbb5660facd5418c27e89fd1b1b1fd37a50f970 # v0
+      - uses: gagoar/pr-brief@b995a528b695d35cf19207595752b8c165170b20 # v0
